@@ -1,0 +1,22 @@
+# Web框架和服务器
+fastapi>=0.104.0  # FastAPI Web框架
+uvicorn>=0.24.0   # ASGI服务器,用于运行FastAPI应用
+
+# 数据验证和配置
+pydantic>=2.4.2         # 数据验证和序列化库
+pydantic-settings>=2.0.3 # Pydantic的配置管理扩展
+python-dotenv>=1.0.0    # 用于加载.env环境变量文件
+
+# 数据库和工具
+motor>=3.3.1           # MongoDB异步Python驱动
+python-multipart>=0.0.6 # 用于处理multipart/form-data
+email-validator>=2.0.0  # 邮件地址验证
+
+# 测试工具
+pytest>=7.4.3         # Python测试框架
+pytest-asyncio>=0.21.1 # Pytest的异步测试支持
+
+# 代码质量工具
+black>=23.10.1        # Python代码格式化工具
+isort>=5.12.0         # Python import语句排序工具
+flake8>=6.1.0         # Python代码风格检查工具
