@@ -6,11 +6,11 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from app.db.mongodb import db
-from app.models.content import Content, ContentType
+from app.models.content import Content, ContentType, get_hot_information, get_hot_guides
 from app.models.response import ResponseModel, ErrorResponse
 from typing import List, Optional
 from bson import ObjectId, errors as bson_errors
-from datetime import datetime, UTC
+from datetime import datetime, UTC, timedelta
 from contextlib import asynccontextmanager
 
 @asynccontextmanager
@@ -135,7 +135,7 @@ async def list_contents(
         cursor = collection.find(query).skip(skip).limit(limit)
         contents = await cursor.to_list(length=limit)
         
-        # 转换所有文档的_id为id
+        # 转换所有文��的_id为id
         for content in contents:
             content["id"] = str(content.pop("_id"))
         
@@ -231,24 +231,20 @@ async def set_content_hot_status(
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     """渲染首页"""
-    # 获取热门内容
-    hot_information = await db.db["information"].find(
-        {"is_hot": True}
-    ).to_list(length=10)
+    # 获取热门信息和指南
+    hot_information = await get_hot_information()
+    hot_guides = await get_hot_guides()
     
-    hot_guides = await db.db["guide"].find(
-        {"is_hot": True}
-    ).to_list(length=10)
-    
-    # 转换 _id 为 id
-    for content in hot_information + hot_guides:
-        content["id"] = str(content.pop("_id"))
+    # 计算下次更新时间
+    next_update = datetime.now() + timedelta(days=1)
+    next_update_date = next_update.strftime("%m月%d日")
     
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
             "hot_information": hot_information,
-            "hot_guides": hot_guides
+            "hot_guides": hot_guides,
+            "next_update_date": next_update_date
         }
     ) 
