@@ -23,10 +23,10 @@ class GuideContent(BaseModel):
     instructions: Optional[str] = None
 
 class Content(BaseModel):
-    id: Optional[str] = Field(default=None, alias="_id")
+    id: Optional[str] = Field(default=None)
     content_type: ContentType
     domain: ContentDomain
     topic: str
     content: Union[List[ListItem], GuideContent]
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow) 
+    created_at: datetime = Field(default_factory=lambda: datetime.now(datetime.UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(datetime.UTC)) 
