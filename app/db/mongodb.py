@@ -6,11 +6,19 @@ class MongoDB:
     db = None
 
     async def connect_to_database(self):
-        self.client = AsyncIOMotorClient(settings.MONGODB_URL)
-        self.db = self.client[settings.DATABASE_NAME]
+        try:
+            self.client = AsyncIOMotorClient(settings.MONGODB_URL)
+            self.db = self.client[settings.DATABASE_NAME]
+            # 测试连接
+            await self.client.admin.command('ping')
+            print("Successfully connected to MongoDB")
+        except Exception as e:
+            print(f"Could not connect to MongoDB: {e}")
+            raise e
         
     async def close_database_connection(self):
         if self.client:
             self.client.close()
+            print("MongoDB connection closed")
 
-db = MongoDB() 
+db = MongoDB()
