@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewHK 内容服务</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-center">NewHK 内容服务</h1>
+        
+        <!-- 热门信息 -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">📌 热门信息</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for info in hot_information %}
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">{{ info.topic }}</h3>
+                        <span class="text-sm text-gray-500">{{ info.domain.name }}</span>
+                    </div>
+                    <div class="space-y-2">
+                        {% if info.content is sequence and info.content is not string %}
+                            {% for item in info.content %}
+                            <div class="border-b pb-2">
+                                <div class="font-medium">{{ item.name }}</div>
+                                {% if item.link %}
+                                <a href="{{ item.link }}" class="text-blue-500 text-sm hover:underline" target="_blank">查看链接</a>
+                                {% endif %}
+                                {% if item.remarks %}
+                                <div class="text-sm text-gray-600">{{ item.remarks }}</div>
+                                {% endif %}
+                                {% if item.metrics %}
+                                <div class="text-sm text-gray-600">
+                                    {% for key, value in item.metrics.items() %}
+                                    {{ key }}: {{ value }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- 热门指南 -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">📚 热门指南</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for guide in hot_guides %}
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">{{ guide.topic }}</h3>
+                        <span class="text-sm text-gray-500">{{ guide.domain.name }}</span>
+                    </div>
+                    <div class="space-y-4">
+                        <p class="text-gray-700">{{ guide.content.description }}</p>
+                        {% if guide.content.instructions %}
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h4 class="font-medium mb-2">操作指南：</h4>
+                            <pre class="text-sm text-gray-600">{{ guide.content.instructions }}</pre>
+                        </div>
+                        {% endif %}
+                        {% if guide.content.data_table %}
+                        <div class="mt-4">
+                            <h4 class="font-medium mb-2">数据表：</h4>
+                            <div class="bg-gray-50 p-4 rounded">
+                                {% for key, value in guide.content.data_table.items() %}
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-600">{{ key }}:</span>
+                                    <span class="font-medium">
+                                        {% if value is sequence and value is not string %}
+                                            {{ value|join(", ") }}
+                                        {% else %}
+                                            {{ value }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

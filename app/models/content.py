@@ -29,4 +29,6 @@ class Content(BaseModel):
     topic: str
     content: Union[List[ListItem], GuideContent]
     created_at: datetime = Field(default_factory=lambda: datetime.now(datetime.UTC))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(datetime.UTC)) 
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(datetime.UTC))
+    is_hot: bool = Field(default=False, description="是否为热门内容")
+ 

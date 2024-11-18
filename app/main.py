@@ -1,11 +1,14 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.exceptions import RequestValidationError
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 from app.db.mongodb import db
 from app.models.content import Content, ContentType
 from app.models.response import ResponseModel, ErrorResponse
-from typing import List
+from typing import List, Optional
 from bson import ObjectId, errors as bson_errors
 from datetime import datetime, UTC
 from contextlib import asynccontextmanager
@@ -30,6 +33,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc):
@@ -111,16 +117,19 @@ async def get_content(content_type: ContentType, id: str):
 @app.get("/content/{content_type}/")
 async def list_contents(
     content_type: ContentType, 
-    domain: str = None, 
+    domain: str = None,
+    is_hot: Optional[bool] = None,
     skip: int = 0, 
     limit: int = 20
 ):
-    """列出内容，支持按领域筛选和分页"""
+    """列出内容，支持按领域筛选、热门筛选和分页"""
     try:
         collection = db.db[content_type]
         query = {"content_type": content_type}
         if domain:
             query["domain.name"] = domain
+        if is_hot is not None:
+            query["is_hot"] = is_hot
             
         total = await collection.count_documents(query)
         cursor = collection.find(query).skip(skip).limit(limit)
@@ -183,4 +192,63 @@ async def delete_content(content_type: ContentType, id: str):
     except bson_errors.InvalidId:
         raise HTTPException(status_code=400, detail="无效的ID格式")
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e)) 
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.patch("/content/{content_type}/{id}/hot")
+async def set_content_hot_status(
+    content_type: ContentType,
+    id: str,
+    is_hot: bool
+):
+    """设置或取消内容的热门状态"""
+    try:
+        collection = db.db[content_type]
+        result = await collection.find_one_and_update(
+            {"_id": ObjectId(id)},
+            {
+                "$set": {
+                    "is_hot": is_hot,
+                    "updated_at": datetime.now(UTC)
+                }
+            },
+            return_document=True
+        )
+        
+        if not result:
+            raise HTTPException(status_code=404, detail="内容不存在")
+            
+        result["id"] = str(result.pop("_id"))
+        
+        return ResponseModel[Content](
+            data=Content(**result),
+            message="热门状态更新成功"
+        )
+    except bson_errors.InvalidId:
+        raise HTTPException(status_code=400, detail="无效的ID格式")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    """渲染首页"""
+    # 获取热门内容
+    hot_information = await db.db["information"].find(
+        {"is_hot": True}
+    ).to_list(length=10)
+    
+    hot_guides = await db.db["guide"].find(
+        {"is_hot": True}
+    ).to_list(length=10)
+    
+    # 转换 _id 为 id
+    for content in hot_information + hot_guides:
+        content["id"] = str(content.pop("_id"))
+    
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "hot_information": hot_information,
+            "hot_guides": hot_guides
+        }
+    ) 
