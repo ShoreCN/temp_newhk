@@ -5,6 +5,49 @@ import sys
 sys.path.append(".")  # 添加项目根目录到路径
 from app.core.config import settings
 
+sample_data_category = [
+    {
+        "name": "daily",
+        "category_type": "information",
+        "description": "日常生活中常用的各类产品"
+    },
+    {
+        "name": "shopping",
+        "category_type": "information",
+        "description": "香港购物各类资讯"
+    },
+    {
+        "name": "news",
+        "category_type": "information",
+        "description": "香港新闻资讯"
+    },
+    {
+        "name": "bank",
+        "category_type": "guide",
+        "description": "香港银行相关攻略"
+    },
+    {
+        "name": "insurance",
+        "category_type": "guide",
+        "description": "香港保险相关攻略"
+    },
+    {
+        "name": "tax",
+        "category_type": "guide",
+        "description": "香港税务相关攻略"
+    },
+    {
+        "name": "job",
+        "category_type": "guide",
+        "description": "香港求职相关攻略"
+    },
+    {
+        "name": "life",
+        "category_type": "guide",
+        "description": "香港生活相关攻略"
+    }
+]
+
 sample_data = [
     # 热门资讯类内容1
     {
@@ -196,7 +239,7 @@ sample_data = [
     {
         "content_type": "guide",
         "category": {
-            "name": "银行",
+            "name": "bank",
             "description": "香港银行相关攻略"
         },
         "topic": "香港银行定存利率",
@@ -340,7 +383,7 @@ sample_data = [
     {
         "content_type": "guide",
         "category": {
-            "name": "求职",
+            "name": "job",
             "description": "香港求职信息"
         },
         "topic": "香港IT行业薪资报告",
@@ -383,7 +426,7 @@ sample_data = [
     {
         "content_type": "guide",
         "category": {
-            "name": "生活",
+            "name": "life",
             "description": "香港生活指南"
         },
         "topic": "香港租房攻略",
@@ -424,8 +467,15 @@ async def insert_sample_data():
     client = AsyncIOMotorClient(settings.MONGODB_URL)
     db = client[settings.DATABASE_NAME]
     # 清空现有数据
+    await db.category.delete_many({})
     await db.information.delete_many({})
     await db.guide.delete_many({})
+
+    # 插入分类数据, 并设置created_at和updated_at
+    for data in sample_data_category:
+        data["created_at"] = datetime.now(UTC)
+        data["updated_at"] = datetime.now(UTC)
+    await db.category.insert_many(sample_data_category)
     
     # 插入示例数据
     for data in sample_data:

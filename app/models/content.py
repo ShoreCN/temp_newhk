@@ -4,14 +4,11 @@ from datetime import datetime
 from enum import Enum
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.core.config import settings
+from .category import Category
 
 class ContentType(str, Enum):
     INFORMATION = "information"
     GUIDE = "guide"
-
-class ContentCategory(BaseModel):
-    name: str
-    description: Optional[str] = None
 
 class ListItem(BaseModel):
     name: str
@@ -41,7 +38,7 @@ class GuideContent(BaseModel):
 class Content(BaseModel):
     id: Optional[str] = Field(default=None)
     content_type: ContentType
-    category: ContentCategory
+    category: Category
     topic: str
     tags: Optional[List[str]] = None
     source_list: Optional[List[Source]] = None
