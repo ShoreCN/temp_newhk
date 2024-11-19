@@ -9,7 +9,7 @@ class ContentType(str, Enum):
     INFORMATION = "information"
     GUIDE = "guide"
 
-class ContentDomain(BaseModel):
+class ContentCategory(BaseModel):
     name: str
     description: Optional[str] = None
 
@@ -19,16 +19,32 @@ class ListItem(BaseModel):
     metrics: Optional[dict] = None
     remarks: Optional[str] = None
 
+class Source(BaseModel):
+    name: str
+    link: str
+    logo: Optional[str] = None
+
+class DataTableItem(BaseModel):
+    name: str
+    metrics: Optional[dict] = None
+    remarks: Optional[str] = None
+
+class DataTable(BaseModel):
+    name: str
+    details: List[DataTableItem] = None
+
 class GuideContent(BaseModel):
     description: str
-    data_table: Optional[dict] = None
-    instructions: Optional[str] = None
+    instructions: Optional[str] = None  # 操作指南, 后续可考虑用DSL来实现
+    data_table: List[DataTableItem] = None # 目前版本每个指南的数据详情只有一张表 TODO: 后续支持多张表
 
 class Content(BaseModel):
     id: Optional[str] = Field(default=None)
     content_type: ContentType
-    domain: ContentDomain
+    category: ContentCategory
     topic: str
+    tags: Optional[List[str]] = None
+    source_list: Optional[List[Source]] = None
     content: Union[List[ListItem], GuideContent]
     created_at: datetime = Field(default_factory=lambda: datetime.now(datetime.UTC))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(datetime.UTC))

@@ -95,6 +95,27 @@
         .nav-item.active {
             color: white;
         }
+        
+        .price {
+            margin-left: auto;
+            color: #ff6b6b;
+        }
+        
+        .metric {
+            margin-left: 8px;
+            color: #4dabf7;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e9ecef;
+            margin-bottom: 16px;
+        }
+        
+        .guide-content {
+            color: #ced4da;
+        }
     </style>
 </head>
 <body>
@@ -113,8 +134,12 @@
             </div>
             {% for item in info.content %}
             <div class="list-item">
-                <img src="{{ item.icon if item.icon else '/static/default-icon.png' }}" alt="" style="width: 24px; height: 24px; margin-right: 8px;">
+                <img src="{{ item.metrics.logo if item.metrics and item.metrics.logo else '/static/default-icon.png' }}" 
+                     alt="" style="width: 24px; height: 24px; margin-right: 8px;">
                 <span>{{ item.name }}</span>
+                {% if item.metrics and item.metrics.price %}
+                <span class="price">{{ item.metrics.price }}</span>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -128,9 +153,12 @@
             <h3>{{ guide.topic }}</h3>
             <div class="guide-content">
                 {% if guide.content.data_table %}
-                    {% for key, value in guide.content.data_table.items() %}
+                    {% for item in guide.content.data_table %}
                     <div class="list-item">
-                        <span>{{ key }}: {{ value }}</span>
+                        <span>{{ item.name }}</span>
+                        {% for key, value in item.metrics.items() %}
+                        <span class="metric">{{ value }}</span>
+                        {% endfor %}
                     </div>
                     {% endfor %}
                 {% endif %}
@@ -153,5 +181,21 @@
             <span>攻略</span>
         </a>
     </nav>
+
+    <div class="filter-section">
+        <select id="categoryFilter">
+            <option value="">所有分类</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <script>
+    document.getElementById('categoryFilter').addEventListener('change', function() {
+        const category = this.value;
+        window.location.href = category ? `/?category=${category}` : '/';
+    });
+    </script>
 </body>
 </html> 

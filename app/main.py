@@ -117,7 +117,7 @@ async def get_content(content_type: ContentType, id: str):
 @app.get("/content/{content_type}/")
 async def list_contents(
     content_type: ContentType, 
-    domain: str = None,
+    category: str = None,
     is_hot: Optional[bool] = None,
     skip: int = 0, 
     limit: int = 20
@@ -126,8 +126,8 @@ async def list_contents(
     try:
         collection = db.db[content_type]
         query = {"content_type": content_type}
-        if domain:
-            query["domain.name"] = domain
+        if category:
+            query["category"] = category
         if is_hot is not None:
             query["is_hot"] = is_hot
             
@@ -135,7 +135,7 @@ async def list_contents(
         cursor = collection.find(query).skip(skip).limit(limit)
         contents = await cursor.to_list(length=limit)
         
-        # 转换所有文��的_id为id
+        # 转换所有文的_id为id
         for content in contents:
             content["id"] = str(content.pop("_id"))
         
@@ -247,4 +247,16 @@ async def home(request: Request):
             "hot_guides": hot_guides,
             "next_update_date": next_update_date
         }
-    ) 
+    )
+@app.get("/api/hot-content")
+async def get_hot_content():
+    try:
+        info_list = await get_hot_information()
+        guide_list = await get_hot_guides()
+            
+        return {
+            "information": info_list,
+            "guides": guide_list
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
