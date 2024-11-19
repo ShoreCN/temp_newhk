@@ -336,7 +336,7 @@ sample_data = [
         "next_update_at": datetime.now(UTC) + timedelta(days=1),
     },
     
-    # 普通指南类内容
+    # 热门指南类内容2
     {
         "content_type": "guide",
         "category": {
@@ -373,7 +373,7 @@ sample_data = [
                 }
             ]
         },
-        "is_hot": False,
+        "is_hot": True,
         "created_at": datetime.now(UTC),
         "updated_at": datetime.now(UTC),
         "next_update_at": datetime.now(UTC) + timedelta(days=1),
