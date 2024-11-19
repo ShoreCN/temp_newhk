@@ -1,10 +1,9 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi import Request
 from app.db.mongodb import db
 from app.models.content import Content, ContentType, get_hot_information, get_hot_guides
 from app.models.response import ResponseModel, ErrorResponse
@@ -248,6 +247,7 @@ async def home(request: Request):
             "next_update_date": next_update_date
         }
     )
+
 @app.get("/api/hot-content")
 async def get_hot_content():
     try:
@@ -260,3 +260,4 @@ async def get_hot_content():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+

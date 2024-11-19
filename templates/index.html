@@ -116,6 +116,80 @@
         .guide-content {
             color: #ced4da;
         }
+        
+        /* 添加表格相关样式 */
+        .rate-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            background-color: #2c3449;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .rate-table th,
+        .rate-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #3a4257;
+        }
+
+        .rate-table th {
+            background-color: #1a2234;
+            color: #e9ecef;
+            font-weight: 500;
+        }
+
+        .rate-table td {
+            color: #ced4da;
+        }
+
+        .rate-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rate-value {
+            color: #4dabf7;
+            font-weight: 500;
+        }
+
+        .rate-table tr[style*="display: none"] + tr td {
+            border-top: none;
+        }
+
+        .rate-table tbody tr:not([style*="display: none"]):last-child td {
+            border-bottom: none;
+        }
+
+        /* 添加过滤控件的样式 */
+        .filter-controls {
+            margin: 0 0 20px 0;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 0 4px;
+        }
+
+        .filter-controls select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            background-color: #2c3449;
+            color: #e9ecef;
+            border: 1px solid #3a4257;
+            min-width: 120px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .filter-controls select:hover {
+            border-color: #4dabf7;
+        }
+
+        .filter-controls select:focus {
+            outline: none;
+            border-color: #4dabf7;
+            box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -147,20 +221,69 @@
     </div>
 
     <div class="section-title">热门攻略</div>
+    <div class="filter-controls">
+        <select id="currencyFilter">
+            <option value="">所有币种</option>
+            <option value="HKD">港币 (HKD)</option>
+            <option value="USD">美元 (USD)</option>
+            <option value="RMB">人民币 (RMB)</option>
+        </select>
+        <select id="periodFilter">
+            <option value="">所有期限</option>
+            <option value="1 month">1个月</option>
+            <option value="3 months">3个月</option>
+            <option value="6 months">6个月</option>
+        </select>
+        <select id="amountFilter">
+            <option value="">所有金额</option>
+            <option value="10,000">10,000</option>
+            <option value="100,000">100,000</option>
+            <option value="1,000,000">1,000,000</option>
+        </select>
+    </div>
     <div class="content-cards">
         {% for guide in hot_guides %}
         <div class="card">
             <h3>{{ guide.topic }}</h3>
             <div class="guide-content">
-                {% if guide.content.data_table %}
-                    {% for item in guide.content.data_table %}
-                    <div class="list-item">
-                        <span>{{ item.name }}</span>
-                        {% for key, value in item.metrics.items() %}
-                        <span class="metric">{{ value }}</span>
+                {% if guide.topic == "香港银行定存利率" %}
+                    <table class="rate-table">
+                        <thead>
+                            <tr>
+                                <th>银行</th>
+                                <th>币种</th>
+                                <th>金额</th>
+                                <th>期限</th>
+                                <th>利率</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for bank in guide.content.data_table %}
+                                {% if bank.metrics and bank.metrics.deposit_rate_list %}
+                                    {% for rate in bank.metrics.deposit_rate_list %}
+                                    <tr>
+                                        <td>{{ bank.name }}</td>
+                                        <td>{{ rate.currency }}</td>
+                                        <td>{{ rate.amount }}</td>
+                                        <td>{{ rate.period }}</td>
+                                        <td class="rate-value">{{ rate.rate }}%</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    {% if guide.content.data_table %}
+                        {% for item in guide.content.data_table %}
+                        <div class="list-item">
+                            <span>{{ item.name }}</span>
+                            {% for key, value in item.metrics.items() %}
+                            <span class="metric">{{ value }}</span>
+                            {% endfor %}
+                        </div>
                         {% endfor %}
-                    </div>
-                    {% endfor %}
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
@@ -182,19 +305,42 @@
         </a>
     </nav>
 
-    <div class="filter-section">
-        <select id="categoryFilter">
-            <option value="">所有分类</option>
-            {% for cat in categories %}
-            <option value="{{ cat }}">{{ cat }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
     <script>
     document.getElementById('categoryFilter').addEventListener('change', function() {
         const category = this.value;
         window.location.href = category ? `/?category=${category}` : '/';
+    });
+
+    function filterRates() {
+        const currency = document.getElementById('currencyFilter').value;
+        const period = document.getElementById('periodFilter').value;
+        const amount = document.getElementById('amountFilter').value;
+        
+        const rows = document.querySelectorAll('.rate-table tbody tr');
+        
+        rows.forEach(row => {
+            const rowCurrency = row.cells[1].textContent.trim();
+            const rowPeriod = row.cells[3].textContent.trim();
+            const rowAmount = row.cells[2].textContent.trim();
+            
+            const showRow = (!currency || rowCurrency === currency) &&
+                          (!period || rowPeriod === period) &&
+                          (!amount || rowAmount === amount);
+            
+            row.style.display = showRow ? '' : 'none';
+        });
+    }
+
+    // 页面加载完成后初始化过滤器
+    document.addEventListener('DOMContentLoaded', function() {
+        const filters = ['currencyFilter', 'periodFilter', 'amountFilter'];
+        
+        filters.forEach(filterId => {
+            const filter = document.getElementById(filterId);
+            if (filter) {
+                filter.addEventListener('change', filterRates);
+            }
+        });
     });
     </script>
 </body>
