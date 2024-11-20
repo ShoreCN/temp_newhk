@@ -256,16 +256,24 @@ async def home(request: Request):
         }
     )
 
-@app.get("/api/hot-content")
-async def get_hot_content():
+@app.get("/hot/{content_type}")
+async def get_hot_content(content_type: ContentType, brief: bool = False):
     try:
-        info_list = await get_hot_information()
-        guide_list = await get_hot_guides()
+        if content_type == ContentType.INFORMATION:
+            info_list = await get_hot_information()
+        elif content_type == ContentType.GUIDE:
+            guide_list = await get_hot_guides()
             
-        return {
-            "information": info_list,
-            "guides": guide_list
-        }
+        # 设置投影，如果brief为True则排除content字段
+        projection = {"content": 0} if brief else None
+
+        # 使用content api的list_contents方法
+        contents = await list_contents(content_type, is_hot=True, brief=brief)
+        
+        return ResponseModel[List[Content]](
+            data=contents.data,
+            message="获取热门内容成功"
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
