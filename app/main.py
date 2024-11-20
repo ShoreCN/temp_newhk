@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from app.db.mongodb import db
 from app.models.content import Content, ContentType, get_hot_information, get_hot_guides
 from app.models.response import ResponseModel, ErrorResponse
-from app.models.category import Category
+from app.models.category import Category, CategoryType
 from typing import List, Optional
 from bson import ObjectId, errors as bson_errors
 from datetime import datetime, UTC, timedelta
@@ -270,7 +270,7 @@ async def create_category(category: Category):
         category_dict["created_at"] = datetime.now(UTC)
         category_dict["updated_at"] = datetime.now(UTC)
         
-        collection = db.db["categories"]
+        collection = db.db["category"]
         result = await collection.insert_one(category_dict)
         
         created_category = await collection.find_one({"_id": result.inserted_id})
@@ -287,7 +287,7 @@ async def create_category(category: Category):
 async def get_category(id: str):
     """获取指定ID的分类"""
     try:
-        collection = db.db["categories"]
+        collection = db.db["category"]
         category = await collection.find_one({"_id": ObjectId(id)})
         if not category:
             raise HTTPException(status_code=404, detail="分类不存在")
@@ -304,11 +304,13 @@ async def get_category(id: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/category/")
-async def list_categories(parent_id: Optional[str] = None):
+async def list_categories(category_type: Optional[CategoryType] = None, parent_id: Optional[str] = None):
     """列出所有分类，支持按父分类筛选"""
     try:
         collection = db.db["category"]
         query = {}
+        if category_type:
+            query["category_type"] = category_type
         if parent_id:
             query["parent_id"] = parent_id
             

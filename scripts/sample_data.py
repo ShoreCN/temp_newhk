@@ -52,10 +52,7 @@ sample_data = [
     # 热门资讯类内容1
     {
         "content_type": "information",
-        "category": {
-            "name": "daily",
-            "description": "日常生活中常用的各类产品"
-        },
+        "category": "daily",
         "topic": "港区app下载榜单📱",
         "tags": ["购物", "必备", "游戏", "生活", "旅游"],
         "source_list": [
@@ -116,10 +113,7 @@ sample_data = [
     # 热门资讯类内容2
     {
         "content_type": "information",
-        "category": {
-            "name": "shopping",
-            "description": "香港购物各类资讯"
-        },
+        "category": "shopping",
         "topic": "每周电子产品热销排行榜",
         "tags": ["电子", "购物", "手机"],
         "source_list": [
@@ -190,10 +184,7 @@ sample_data = [
     # 普通资讯类内容
     {
         "content_type": "information",
-        "category": {
-            "name": "news",
-            "description": "香港新闻资讯"
-        },
+        "category": "news",
         "topic": "今日热门新闻📰",
         "tags": ["新闻", "资讯", "香港"],
         "source_list": [
@@ -238,10 +229,7 @@ sample_data = [
     # 热门指南类内容1
     {
         "content_type": "guide",
-        "category": {
-            "name": "bank",
-            "description": "香港银行相关攻略"
-        },
+        "category": "bank",
         "topic": "香港银行定存利率",
         "tags": ["金额", "时间", "币种"],
         "source_list": [
@@ -382,10 +370,7 @@ sample_data = [
     # 热门指南类内容2
     {
         "content_type": "guide",
-        "category": {
-            "name": "job",
-            "description": "香港求职信息"
-        },
+        "category": "job",
         "topic": "香港IT行业薪资报告",
         "tags": ["薪资", "行业", "IT"],
         "source_list": [
@@ -425,10 +410,7 @@ sample_data = [
     # 普通指南类内容
     {
         "content_type": "guide",
-        "category": {
-            "name": "life",
-            "description": "香港生活指南"
-        },
+        "category": "life",
         "topic": "香港租房攻略",
         "tags": ["租房", "生活", "香港"],
         "source_list": [
