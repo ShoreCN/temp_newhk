@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from app.db.mongodb import db
-from app.models.content import Content, ContentType, get_hot_information, get_hot_guides
+from app.models.content import Content, ContentType, get_hot_information, get_hot_guides, GuideContent
 from app.models.response import ResponseModel, ErrorResponse
 from app.models.category import Category, CategoryType
 from typing import List, Optional
@@ -119,6 +119,7 @@ async def list_contents(
     content_type: ContentType, 
     category: str = None,
     is_hot: Optional[bool] = None,
+    brief: bool = False,
     skip: int = 0, 
     limit: int = 20
 ):
@@ -131,13 +132,19 @@ async def list_contents(
         if is_hot is not None:
             query["is_hot"] = is_hot
             
+        # 设置投影，如果brief为True则排除content字段
+        projection = {"content": 0} if brief else None
+
         total = await collection.count_documents(query)
-        cursor = collection.find(query).skip(skip).limit(limit)
+        cursor = collection.find(query, projection).skip(skip).limit(limit)
         contents = await cursor.to_list(length=limit)
         
-        # 转换所有文的_id为id
+        # 转换所有文档的_id为id
         for content in contents:
             content["id"] = str(content.pop("_id"))
+            # 如果是brief模式且content字段被排除，添加空的content字段以满足验证
+            if brief and "content" not in content:
+                content["content"] = None
         
         return ResponseModel[List[Content]](
             data=[Content(**content) for content in contents],
