@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from app.models.content import get_hot_information, get_hot_guides
@@ -20,9 +20,11 @@ async def information_page(request: Request):
     db = client[settings.DATABASE_NAME]
     cursor = db.information.find(
         {},
-        {'_id': 0}
     ).sort("created_at", -1)
     information_list = await cursor.to_list(length=20)
+    # 转换所有文档的_id为id
+    for content in information_list:
+        content["id"] = str(content.pop("_id"))
     
     return templates.TemplateResponse(
         "information.html",
@@ -52,4 +54,18 @@ async def information_edit_page(request: Request, id: str = None):
             "categories": categories,
             "content": content
         }
-    ) 
+    )
+
+@router.delete("/information/{id}")
+async def delete_information(id: str):
+    try:
+        client = AsyncIOMotorClient(settings.MONGODB_URL)
+        db = client[settings.DATABASE_NAME]
+        result = await db.information.delete_one({"_id": ObjectId(id)})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="资讯不存在")
+            
+        return {"message": "删除成功"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e)) 

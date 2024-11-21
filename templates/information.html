@@ -222,6 +222,66 @@
             align-items: center;
             gap: 12px;
         }
+        
+        .information-title-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-edit {
+            background-color: #48bb78;
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .btn-delete {
+            background-color: #e53e3e;
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        /* 添加确认对话框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
     </style>
 </head>
 <body>
@@ -245,8 +305,23 @@
         {% for information in information_list %}
         <div class="information-card">
             <div class="information-header">
-                <h3 class="information-title">{{ information.topic }}</h3>
-                <span class="information-time">{{ information.updated_at.strftime('%m-%d %H:%M') }}</span>
+                <div class="information-title-section">
+                    <span style="display:none;">Debug ID: {{ information.id }}</span>
+                    <h3 class="information-title">{{ information.topic }}</h3>
+                    <span class="information-time">{{ information.updated_at.strftime('%m-%d %H:%M') }}</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-edit" 
+                            onclick="window.location.href='/information/edit?id={{ information.id }}'"
+                            data-id="{{ information.id }}">
+                        ✏️ 修改
+                    </button>
+                    <button class="btn btn-delete" 
+                            onclick="deleteInformation('{{ information.id }}')"
+                            data-id="{{ information.id }}">
+                        🗑️ 删除
+                    </button>
+                </div>
             </div>
             <div class="information-content">
                 {% if information.content %}
@@ -302,6 +377,17 @@
         </a>
     </nav>
 
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">确认删除</div>
+            <p>确定要删除这条资讯吗？此操作不可恢复。</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">取消</button>
+                <button class="btn btn-delete" onclick="confirmDelete()">确认删除</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 分类标签点击处理
         const categoryTags = document.querySelectorAll('.category-tag');
@@ -317,6 +403,61 @@
                 // filterinformationByCategory(category);
             });
         });
+        
+        let deleteId = null;
+        
+        function deleteInformation(id) {
+            if (!id) {
+                console.error('无效的资讯ID');
+                return;
+            }
+            deleteId = id;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            deleteId = null;
+        }
+        
+        async function confirmDelete() {
+            if (!deleteId) {
+                console.error('未找到要删除的资讯ID');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/content/information/${deleteId}`, {  // 确保URL路径正确
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'  // 添加AJAX标识
+                    }
+                });
+                
+                if (response.ok) {
+                    console.log('删除成功');
+                    window.location.reload();
+                } else {
+                    const error = await response.json();
+                    console.error('删除失败:', error);
+                    alert(`删除失败: ${error.detail || '未知错误'}`);
+                }
+            } catch (error) {
+                console.error('删除请求错误:', error);
+                alert(`删除失败: ${error.message || '网络错误'}`);
+            } finally {
+                closeDeleteModal();
+            }
+        }
+        
+        // 点击模态框外部关闭
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+        
     </script>
 </body>
 </html> 
