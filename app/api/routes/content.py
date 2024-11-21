@@ -55,17 +55,3 @@ async def information_edit_page(request: Request, id: str = None):
             "content": content
         }
     )
-
-@router.delete("/information/{id}")
-async def delete_information(id: str):
-    try:
-        client = AsyncIOMotorClient(settings.MONGODB_URL)
-        db = client[settings.DATABASE_NAME]
-        result = await db.information.delete_one({"_id": ObjectId(id)})
-        
-        if result.deleted_count == 0:
-            raise HTTPException(status_code=404, detail="资讯不存在")
-            
-        return {"message": "删除成功"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) 

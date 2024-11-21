@@ -1,6 +1,6 @@
 from typing import List, Optional, Union
 from pydantic import BaseModel, Field
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.core.config import settings
@@ -50,6 +50,7 @@ class Content(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now())
     updated_at: datetime = Field(default_factory=lambda: datetime.now())
     is_hot: bool = Field(default=False, description="是否为热门内容")
+    next_update_at: Optional[datetime] = Field(default_factory=lambda: datetime.now() + timedelta(days=1))
 
 async def get_hot_information():
     client = AsyncIOMotorClient(settings.MONGODB_URL)
