@@ -231,6 +231,7 @@ sample_data = [
         "content_type": "guide",
         "category": "bank",
         "topic": "香港银行定存利率",
+        "sub_topic": "至高 *4.5%*",
         "tags": ["金额", "时间", "币种"],
         "source_list": [
             {
@@ -372,6 +373,7 @@ sample_data = [
         "content_type": "guide",
         "category": "job",
         "topic": "香港IT行业薪资报告",
+        "sub_topic": "最高 *HKD 100,000*",
         "tags": ["薪资", "行业", "IT"],
         "source_list": [
             {
@@ -412,6 +414,7 @@ sample_data = [
         "content_type": "guide",
         "category": "life",
         "topic": "香港租房攻略",
+        "sub_topic": "最低 *$5,000*",
         "tags": ["租房", "生活", "香港"],
         "source_list": [
             {

@@ -43,6 +43,7 @@ class Content(BaseModel):
     content_type: ContentType
     category: str
     topic: str
+    sub_topic: Optional[str] = None
     tags: Optional[List[str]] = None
     source_list: Optional[List[Source]] = None
     content: Union[List[ListItem], GuideContent, None]
