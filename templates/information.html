@@ -95,6 +95,7 @@
         .information-time {
             font-size: 12px;
             color: #718096;
+            margin-left: 2px;
         }
         
         .information-content {
@@ -219,14 +220,14 @@
         
         .news-title-section {
             display: flex;
-            align-items: center;
-            gap: 12px;
+            flex-direction: column;
+            gap: 4px;
         }
         
         .information-title-section {
             display: flex;
-            align-items: center;
-            gap: 12px;
+            flex-direction: column;
+            gap: 4px;
         }
         
         .action-buttons {
@@ -308,7 +309,7 @@
                 <div class="information-title-section">
                     <span style="display:none;">Debug ID: {{ information.id }}</span>
                     <h3 class="information-title">{{ information.topic }}</h3>
-                    <span class="information-time">{{ information.updated_at.strftime('%m-%d %H:%M') }}</span>
+                    <span class="information-time">{{ information.next_update_at.strftime('%m-%d %H:%M') }}</span>
                 </div>
                 <div class="action-buttons">
                     <button class="btn btn-edit" 
