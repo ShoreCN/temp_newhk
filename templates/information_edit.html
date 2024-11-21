@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增资讯 - Explore 香港</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #2b3674;
+            margin: 0;
+            padding: 16px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: #2b3674;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: #4299e1;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .edit-form {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        .content-items {
+            margin-top: 16px;
+        }
+        
+        .content-item {
+            background-color: #f8fafc;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        .delete-item {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            color: #e53e3e;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .add-item {
+            width: 100%;
+            padding: 12px;
+            background-color: #f8fafc;
+            border: 2px dashed #e2e8f0;
+            border-radius: 8px;
+            color: #4299e1;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        
+        .add-item:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            min-height: 42px;
+        }
+        
+        .tag {
+            background-color: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .tag-delete {
+            cursor: pointer;
+            color: #4a5568;
+        }
+        
+        .tag-input input {
+            border: none;
+            outline: none;
+            padding: 4px;
+            font-size: 14px;
+            flex: 1;
+            min-width: 60px;
+        }
+        
+        .preview {
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .preview-title {
+            font-size: 18px;
+            color: #2d3748;
+            margin-bottom: 16px;
+        }
+        
+        .metrics-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .metric-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .delete-metric {
+            color: #e53e3e;
+            cursor: pointer;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>新增资讯</h1>
+        <div>
+            <button class="btn btn-secondary" onclick="window.location.href='/information'">返回</button>
+            <button class="btn btn-primary" onclick="saveInformation()">保存</button>
+        </div>
+    </div>
+
+    <div class="edit-form">
+        <div class="form-group">
+            <label class="form-label">标题</label>
+            <input type="text" class="form-input" id="topic" placeholder="请输入资讯标题">
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">分类</label>
+            <select class="form-select" id="category">
+                {% for category in categories %}
+                <option value="{{ category.name }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">标签</label>
+            <div class="tag-input" id="tagInput">
+                <input type="text" placeholder="输入标签后按回车" onkeydown="handleTagInput(event)">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">内容项</label>
+            <div class="content-items" id="contentItems">
+                <!-- 内容项将通过JS动态添加 -->
+            </div>
+            <button class="add-item" onclick="addContentItem()">+ 添加内容项</button>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">是否热门</label>
+            <input type="checkbox" id="isHot">
+        </div>
+    </div>
+
+    <div class="preview">
+        <div class="preview-title">预览</div>
+        <div id="previewContent">
+            <!-- 预览内容将通过JS动态更新 -->
+        </div>
+    </div>
+
+    <script>
+        let tags = [];
+        let contentItems = [];
+        
+        function handleTagInput(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const input = event.target;
+                const tag = input.value.trim();
+                if (tag && !tags.includes(tag)) {
+                    tags.push(tag);
+                    renderTags();
+                }
+                input.value = '';
+            }
+        }
+        
+        function removeTag(index) {
+            tags.splice(index, 1);
+            renderTags();
+        }
+        
+        function renderTags() {
+            const tagInput = document.getElementById('tagInput');
+            const input = tagInput.querySelector('input');
+            tagInput.innerHTML = '';
+            tags.forEach((tag, index) => {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'tag';
+                tagElement.innerHTML = `
+                    ${tag}
+                    <span class="tag-delete" onclick="removeTag(${index})">×</span>
+                `;
+                tagInput.appendChild(tagElement);
+            });
+            tagInput.appendChild(input);
+        }
+        
+        function addContentItem() {
+            const item = {
+                name: '',
+                link: '',
+                metrics: {}
+            };
+            contentItems.push(item);
+            renderContentItems();
+        }
+        
+        function removeContentItem(index) {
+            contentItems.splice(index, 1);
+            renderContentItems();
+        }
+        
+        function updateContentItem(index, field, value) {
+            if (field.includes('.')) {
+                const [parent, child] = field.split('.');
+                contentItems[index][parent][child] = value;
+            } else {
+                contentItems[index][field] = value;
+            }
+            updatePreview();
+        }
+        
+        function renderContentItems() {
+            const container = document.getElementById('contentItems');
+            container.innerHTML = contentItems.map((item, index) => `
+                <div class="content-item">
+                    <span class="delete-item" onclick="removeContentItem(${index})">×</span>
+                    <div class="form-group">
+                        <input type="text" class="form-input" 
+                               placeholder="名称"
+                               value="${item.name}"
+                               onchange="updateContentItem(${index}, 'name', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" 
+                               placeholder="链接"
+                               value="${item.link || ''}"
+                               onchange="updateContentItem(${index}, 'link', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">指标 (可选)</label>
+                        <div class="metrics-container">
+                            <input type="text" class="form-input" 
+                                   placeholder="指标名称"
+                                   onchange="addMetric(${index}, this.value)">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            updatePreview();
+        }
+        
+        function addMetric(itemIndex, metricName) {
+            if (!metricName) return;
+            
+            if (!contentItems[itemIndex].metrics) {
+                contentItems[itemIndex].metrics = {};
+            }
+            
+            contentItems[itemIndex].metrics[metricName] = '';
+            renderMetrics(itemIndex);
+        }
+        
+        function renderMetrics(itemIndex) {
+            const metricsContainer = document.querySelector(`.content-item:nth-child(${itemIndex + 1}) .metrics-container`);
+            const metrics = contentItems[itemIndex].metrics;
+            
+            metricsContainer.innerHTML = Object.entries(metrics).map(([key, value]) => `
+                <div class="metric-input-group">
+                    <span>${key}</span>
+                    <input type="text" class="form-input"
+                           value="${value}"
+                           onchange="updateMetric(${itemIndex}, '${key}', this.value)">
+                    <span class="delete-metric" onclick="deleteMetric(${itemIndex}, '${key}')">×</span>
+                </div>
+            `).join('') + `
+                <input type="text" class="form-input" 
+                       placeholder="指标名称"
+                       onchange="addMetric(${itemIndex}, this.value)">
+            `;
+        }
+        
+        function updateMetric(itemIndex, metricName, value) {
+            contentItems[itemIndex].metrics[metricName] = value;
+            updatePreview();
+        }
+        
+        function deleteMetric(itemIndex, metricName) {
+            delete contentItems[itemIndex].metrics[metricName];
+            renderMetrics(itemIndex);
+            updatePreview();
+        }
+        
+        function updatePreview() {
+            const preview = document.getElementById('previewContent');
+            preview.innerHTML = `
+                <div class="news-card">
+                    <div class="news-header">
+                        <h3 class="news-title">${document.getElementById('topic').value}</h3>
+                    </div>
+                    <div class="news-content">
+                        ${contentItems.map(item => `
+                            <div class="news-item">
+                                <div class="news-item-content">
+                                    <div class="news-item-title">${item.name}</div>
+                                    <div class="news-item-metrics">
+                                        ${item.metrics.price ? `<span class="metric-tag">${item.metrics.price}</span>` : ''}
+                                        ${item.metrics.sold ? `<span class="metric-tag">销量: ${item.metrics.sold}</span>` : ''}
+                                        ${item.metrics.rating ? `<span class="metric-tag">评分: ${item.metrics.rating}</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        async function saveInformation() {
+            const data = {
+                content_type: "information",
+                category: document.getElementById('category').value,
+                topic: document.getElementById('topic').value,
+                tags: tags,
+                content: contentItems,
+                is_hot: document.getElementById('isHot').checked
+            };
+            
+            try {
+                const response = await fetch('/content/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    alert('保存成功');
+                    window.location.href = '/information';
+                } else {
+                    const error = await response.json();
+                    alert(`保存失败: ${error.message}`);
+                }
+            } catch (error) {
+                alert(`保存失败: ${error.message}`);
+            }
+        }
+        
+        // 监听标题变化以更新预览
+        document.getElementById('topic').addEventListener('input', updatePreview);
+    </script>
+</body>
+</html> 
