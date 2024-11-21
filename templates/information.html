@@ -252,27 +252,33 @@
                 {% if information.content %}
                     {% for item in information.content %}
                     <div class="information-item">
-                        {% if item.metrics and item.metrics.logo %}
-                        <img class="information-item-icon" src="{{ item.metrics.logo }}" alt="">
-                        {% else %}
-                        <img class="information-item-icon" src="/static/default-icon.png" alt="">
+                        {% if item.link %}
+                        <a href="{{ item.link }}" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%;">
                         {% endif %}
-                        <div class="information-item-content">
-                            <div class="information-item-title">{{ item.name }}</div>
-                            <div class="information-item-metrics">
-                                {% if item.metrics %}
-                                    {% if item.metrics.price %}
-                                    <span class="metric-tag">{{ item.metrics.price }}</span>
+                            {% if item.metrics and item.metrics.logo %}
+                            <img class="information-item-icon" src="{{ item.metrics.logo }}" alt="">
+                            {% else %}
+                            <img class="information-item-icon" src="/static/default-icon.png" alt="">
+                            {% endif %}
+                            <div class="information-item-content">
+                                <div class="information-item-title">{{ item.name }}</div>
+                                <div class="information-item-metrics">
+                                    {% if item.metrics %}
+                                        {% if item.metrics.price %}
+                                        <span class="metric-tag">{{ item.metrics.price }}</span>
+                                        {% endif %}
+                                        {% if item.metrics.sold %}
+                                        <span class="metric-tag">销量: {{ item.metrics.sold }}</span>
+                                        {% endif %}
+                                        {% if item.metrics.rating %}
+                                        <span class="metric-tag">评分: {{ item.metrics.rating }}</span>
+                                        {% endif %}
                                     {% endif %}
-                                    {% if item.metrics.sold %}
-                                    <span class="metric-tag">销量: {{ item.metrics.sold }}</span>
-                                    {% endif %}
-                                    {% if item.metrics.rating %}
-                                    <span class="metric-tag">评分: {{ item.metrics.rating }}</span>
-                                    {% endif %}
-                                {% endif %}
+                                </div>
                             </div>
-                        </div>
+                        {% if item.link %}
+                        </a>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 {% endif %}

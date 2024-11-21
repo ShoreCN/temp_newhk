@@ -219,19 +219,28 @@
             {% if info.content %}
                 {% for item in info.content %}
                 <div class="list-item">
-                    <img src="{{ item.metrics.logo if item.metrics and item.metrics.logo else '/static/default-icon.png' }}" 
-                         alt="" style="width: 24px; height: 24px; margin-right: 8px;">
-                    <span>{{ item.name }}</span>
-                    {% if item.metrics %}
-                        {% if item.metrics.price %}
-                        <span class="price">{{ item.metrics.price }}</span>
+                    {% if item.link %}
+                    <a href="{{ item.link }}" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%;">
+                    {% endif %}
+                        {% if item.metrics and item.metrics.logo %}
+                        <img src="{{ item.metrics.logo }}" alt="" style="width: 24px; height: 24px; margin-right: 8px;">
+                        {% else %}
+                        <img src="/static/default-icon.png" alt="" style="width: 24px; height: 24px; margin-right: 8px;">
                         {% endif %}
-                        {% if item.metrics.sold %}
-                        <span class="metric">销量: {{ item.metrics.sold }}</span>
+                        <span>{{ item.name }}</span>
+                        {% if item.metrics %}
+                            {% if item.metrics.price %}
+                            <span class="price">{{ item.metrics.price }}</span>
+                            {% endif %}
+                            {% if item.metrics.sold %}
+                            <span class="metric">销量: {{ item.metrics.sold }}</span>
+                            {% endif %}
+                            {% if item.metrics.rating %}
+                            <span class="metric">评分: {{ item.metrics.rating }}</span>
+                            {% endif %}
                         {% endif %}
-                        {% if item.metrics.rating %}
-                        <span class="metric">评分: {{ item.metrics.rating }}</span>
-                        {% endif %}
+                    {% if item.link %}
+                    </a>
                     {% endif %}
                 </div>
                 {% endfor %}
