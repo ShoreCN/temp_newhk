@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资讯 - Explore 香港</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #2b3674;
+            margin: 0;
+            padding: 16px;
+            padding-bottom: 80px; /* 为底部导航留出空间 */
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: #2b3674;
+        }
+        
+        /* 分类标签滚动容器 */
+        .category-scroll {
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -16px 20px -16px;
+            padding: 0 16px;
+        }
+
+        .category-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* 分类标签样式 */
+        .category-tags {
+            display: inline-flex;
+            gap: 12px;
+            padding: 4px 0;
+        }
+        
+        .category-tag {
+            padding: 8px 16px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .category-tag.active {
+            background-color: #4299e1;
+            color: #ffffff;
+            border-color: #4299e1;
+        }
+        
+        /* 资讯卡片样式 */
+        .information-cards {
+            display: grid;
+            gap: 16px;
+        }
+        
+        .information-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .information-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .information-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .information-time {
+            font-size: 12px;
+            color: #718096;
+        }
+        
+        .information-content {
+            margin-bottom: 12px;
+        }
+        
+        .information-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .information-item:last-child {
+            border-bottom: none;
+        }
+        
+        .information-item-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            margin-right: 12px;
+            object-fit: cover;
+        }
+        
+        .information-item-content {
+            flex: 1;
+        }
+        
+        .information-item-title {
+            font-size: 14px;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+        
+        .information-item-metrics {
+            display: flex;
+            gap: 8px;
+            font-size: 12px;
+            color: #718096;
+        }
+        
+        .metric-tag {
+            padding: 2px 6px;
+            background-color: #ebf8ff;
+            color: #3182ce;
+            border-radius: 4px;
+        }
+        
+        /* 底部导航栏样式 */
+        .navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #718096;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        
+        .nav-item.active {
+            color: #4299e1;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>资讯</h1>
+    </div>
+
+    <div class="category-scroll">
+        <div class="category-tags">
+            <button class="category-tag active">全部</button>
+            {% for category in categories %}
+            <button class="category-tag">{{ category.name }}</button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="information-cards">
+        {% for information in information_list %}
+        <div class="information-card">
+            <div class="information-header">
+                <h3 class="information-title">{{ information.topic }}</h3>
+                <span class="information-time">{{ information.updated_at.strftime('%m-%d %H:%M') }}</span>
+            </div>
+            <div class="information-content">
+                {% if information.content %}
+                    {% for item in information.content %}
+                    <div class="information-item">
+                        {% if item.metrics and item.metrics.logo %}
+                        <img class="information-item-icon" src="{{ item.metrics.logo }}" alt="">
+                        {% else %}
+                        <img class="information-item-icon" src="/static/default-icon.png" alt="">
+                        {% endif %}
+                        <div class="information-item-content">
+                            <div class="information-item-title">{{ item.name }}</div>
+                            <div class="information-item-metrics">
+                                {% if item.metrics %}
+                                    {% if item.metrics.price %}
+                                    <span class="metric-tag">{{ item.metrics.price }}</span>
+                                    {% endif %}
+                                    {% if item.metrics.sold %}
+                                    <span class="metric-tag">销量: {{ item.metrics.sold }}</span>
+                                    {% endif %}
+                                    {% if item.metrics.rating %}
+                                    <span class="metric-tag">评分: {{ item.metrics.rating }}</span>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <nav class="navigation">
+        <a href="/" class="nav-item">
+            <span>🔥</span>
+            <span>热门</span>
+        </a>
+        <a href="/information" class="nav-item active">
+            <span>📰</span>
+            <span>资讯</span>
+        </a>
+        <a href="/guides" class="nav-item">
+            <span>📖</span>
+            <span>攻略</span>
+        </a>
+    </nav>
+
+    <script>
+        // 分类标签点击处理
+        const categoryTags = document.querySelectorAll('.category-tag');
+        categoryTags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                // 移除其他标签的active类
+                categoryTags.forEach(t => t.classList.remove('active'));
+                // 给当前点击的标签添加active类
+                tag.classList.add('active');
+                
+                // TODO: 根据分类筛选���容
+                const category = tag.textContent;
+                // filterinformationByCategory(category);
+            });
+        });
+    </script>
+</body>
+</html> 

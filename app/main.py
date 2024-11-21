@@ -8,6 +8,7 @@ from app.db.mongodb import db
 from app.models.content import Content, ContentType, get_hot_information, get_hot_guides, GuideContent
 from app.models.response import ResponseModel, ErrorResponse
 from app.models.category import Category, CategoryType
+from app.api.routes import content
 from typing import List, Optional
 from bson import ObjectId, errors as bson_errors
 from datetime import datetime, UTC, timedelta
@@ -35,7 +36,10 @@ app.add_middleware(
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+# 注册路由
 templates = Jinja2Templates(directory="templates")
+app.include_router(content.router)
+
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc):
