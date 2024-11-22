@@ -80,13 +80,15 @@ class DBOperations:
                 data = json.load(f)
 
             for collection_name, documents in data.items():
-                # 转换字符串ID为ObjectId，字符串时间为datetime
+                # 转换字符串ID为ObjectId，字符串时间戳为整数
                 for doc in documents:
                     doc['_id'] = ObjectId(doc['_id'])
                     if 'created_at' in doc:
-                        doc['created_at'] = datetime.fromisoformat(doc['created_at'])
+                        doc['created_at'] = int(float(doc['created_at']))
                     if 'updated_at' in doc:
-                        doc['updated_at'] = datetime.fromisoformat(doc['updated_at'])
+                        doc['updated_at'] = int(float(doc['updated_at']))
+                    if 'next_update_at' in doc:
+                        doc['next_update_at'] = int(float(doc['next_update_at']))
                 
                 result = await self.db[collection_name].insert_many(documents)
                 print(f"Imported {len(result.inserted_ids)} documents to {collection_name}")

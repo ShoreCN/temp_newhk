@@ -78,8 +78,8 @@ async def create_content(content: Content):
     """创建新的内容"""
     try:
         content_dict = content.model_dump(exclude={"id"})
-        content_dict["created_at"] = datetime.now(UTC)
-        content_dict["updated_at"] = datetime.now(UTC)
+        content_dict["created_at"] = int(datetime.now().timestamp())
+        content_dict["updated_at"] = int(datetime.now().timestamp())
         
         collection = db.db[content.content_type]
         result = await collection.insert_one(content_dict)
@@ -168,7 +168,7 @@ async def update_content(content_type: ContentType, id: str, content: Content):
     try:
         collection = db.db[content_type]
         update_data = content.model_dump(exclude={"id"})
-        update_data["updated_at"] = datetime.now(UTC)
+        update_data["updated_at"] = int(datetime.now().timestamp())
         
         result = await collection.find_one_and_update(
             {"_id": ObjectId(id)},
@@ -219,7 +219,7 @@ async def set_content_hot_status(
             {
                 "$set": {
                     "is_hot": is_hot,
-                    "updated_at": datetime.now(UTC)
+                    "updated_at": int(datetime.now().timestamp())
                 }
             },
             return_document=True

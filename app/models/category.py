@@ -15,8 +15,8 @@ class Category(BaseModel):
     description: Optional[str] = Field(None, description="分类描述")
     category_type: CategoryType = Field(..., description="分类类型")
     parent_id: Optional[str] = Field(None, description="父分类ID")
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None 
+    created_at: Optional[int] = Field(default_factory=lambda: int(datetime.now().timestamp()))
+    updated_at: Optional[int] = Field(default_factory=lambda: int(datetime.now().timestamp()))
 
 async def get_categories():
     client = AsyncIOMotorClient(settings.MONGODB_URL)

@@ -47,10 +47,12 @@ class Content(BaseModel):
     tags: Optional[List[str]] = None
     source_list: Optional[List[Source]] = None
     content: Union[List[ListItem], GuideContent, None]
-    created_at: datetime = Field(default_factory=lambda: datetime.now())
-    updated_at: datetime = Field(default_factory=lambda: datetime.now())
+    created_at: int = Field(default_factory=lambda: int(datetime.now().timestamp()))
+    updated_at: int = Field(default_factory=lambda: int(datetime.now().timestamp()))
     is_hot: bool = Field(default=False, description="是否为热门内容")
-    next_update_at: Optional[datetime] = Field(default_factory=lambda: datetime.now() + timedelta(days=1))
+    next_update_at: Optional[int] = Field(
+        default_factory=lambda: int((datetime.now() + timedelta(days=1)).timestamp())
+    )
 
 async def get_hot_information():
     client = AsyncIOMotorClient(settings.MONGODB_URL)

@@ -105,9 +105,9 @@ sample_data = [
             }
         ],
         "is_hot": True,
-        "created_at": datetime.now(UTC),
-        "updated_at": datetime.now(UTC),
-        "next_update_at": datetime.now(UTC) + timedelta(days=1),
+        "created_at": int(datetime.now().timestamp()),
+        "updated_at": int(datetime.now().timestamp()),
+        "next_update_at": int((datetime.now() + timedelta(days=1)).timestamp()),
     }, 
 
     # 热门资讯类内容2
@@ -176,9 +176,9 @@ sample_data = [
             }
         ],
         "is_hot": True,
-        "created_at": datetime.now(UTC),
-        "updated_at": datetime.now(UTC),
-        "next_update_at": datetime.now(UTC) + timedelta(days=1),
+        "created_at": int(datetime.now().timestamp()),
+        "updated_at": int(datetime.now().timestamp()),
+        "next_update_at": int((datetime.now() + timedelta(days=1)).timestamp()),
     },
 
     # 普通资讯类内容
@@ -221,9 +221,9 @@ sample_data = [
             }
         ],
         "is_hot": False,
-        "created_at": datetime.now(UTC),
-        "updated_at": datetime.now(UTC),
-        "next_update_at": datetime.now(UTC) + timedelta(days=1),
+        "created_at": int(datetime.now().timestamp()),
+        "updated_at": int(datetime.now().timestamp()),
+        "next_update_at": int((datetime.now() + timedelta(days=1)).timestamp()),
     },
     
     # 热门指南类内容1
@@ -363,9 +363,9 @@ sample_data = [
             
         },
         "is_hot": True,
-        "created_at": datetime.now(UTC),
-        "updated_at": datetime.now(UTC),
-        "next_update_at": datetime.now(UTC) + timedelta(days=1),
+        "created_at": int(datetime.now().timestamp()),
+        "updated_at": int(datetime.now().timestamp()),
+        "next_update_at": int((datetime.now() + timedelta(days=1)).timestamp()),
     },
     
     # 热门指南类内容2
@@ -404,9 +404,9 @@ sample_data = [
             ]
         },
         "is_hot": True,
-        "created_at": datetime.now(UTC),
-        "updated_at": datetime.now(UTC),
-        "next_update_at": datetime.now(UTC) + timedelta(days=1),
+        "created_at": int(datetime.now().timestamp()),
+        "updated_at": int(datetime.now().timestamp()),
+        "next_update_at": int((datetime.now() + timedelta(days=1)).timestamp()),
     },
     
     # 普通指南类内容
@@ -442,9 +442,9 @@ sample_data = [
             ]
         },
         "is_hot": False,
-        "created_at": datetime.now(UTC),
-        "updated_at": datetime.now(UTC),
-        "next_update_at": datetime.now(UTC) + timedelta(days=1),
+        "created_at": int(datetime.now().timestamp()),
+        "updated_at": int(datetime.now().timestamp()),
+        "next_update_at": int((datetime.now() + timedelta(days=1)).timestamp()),
     }
 ]
 
@@ -458,8 +458,8 @@ async def insert_sample_data():
 
     # 插入分类数据, 并设置created_at和updated_at
     for data in sample_data_category:
-        data["created_at"] = datetime.now(UTC)
-        data["updated_at"] = datetime.now(UTC)
+        data["created_at"] = int(datetime.now().timestamp())
+        data["updated_at"] = int(datetime.now().timestamp())
     await db.category.insert_many(sample_data_category)
     
     # 插入示例数据
