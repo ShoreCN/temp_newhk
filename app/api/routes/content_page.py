@@ -66,10 +66,11 @@ async def guides_page(request: Request):
     # 获取指南内容
     client = AsyncIOMotorClient(settings.MONGODB_URL)
     db = client[settings.DATABASE_NAME]
-    cursor = db.guide.find(
-        {},
+    cursor = db.guides.find(
+        {"content_type": "guides"},
     ).sort("created_at", -1)
     guides_list = await cursor.to_list(length=20)
+    
     # 转换所有文档的_id为id
     for content in guides_list:
         content["id"] = str(content.pop("_id"))
