@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from app.db.mongodb import db
 from app.models.content import Content, ContentType, get_hot_information, get_hot_guides, GuideContent
 from app.models.response import ResponseModel, ErrorResponse
-from app.api.routes import category_api, content
+from app.api.routes import category_api, content_page, content_api
 from typing import List, Optional
 from bson import ObjectId, errors as bson_errors
 from datetime import datetime, UTC, timedelta
@@ -37,8 +37,9 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 # 注册路由
 templates = Jinja2Templates(directory="templates")
-app.include_router(content.router)
+app.include_router(content_page.router)
 app.include_router(category_api.router)
+app.include_router(content_api.router)
 
 
 @app.exception_handler(RequestValidationError)
@@ -73,172 +74,6 @@ async def general_exception_handler(request, exc):
         ).model_dump()
     )
 
-@app.post("/content/")
-async def create_content(content: Content):
-    """创建新的内容"""
-    try:
-        content_dict = content.model_dump(exclude={"id"})
-        content_dict["created_at"] = int(datetime.now().timestamp())
-        content_dict["updated_at"] = int(datetime.now().timestamp())
-        
-        collection = db.db[content.content_type]
-        result = await collection.insert_one(content_dict)
-        print(f"insert result: {result}")
-        
-        # 查询刚插入的文档以获取完整数据
-        created_content = await collection.find_one({"_id": result.inserted_id})
-        print(f"created content: {created_content}")
-        created_content["id"] = str(created_content.pop("_id"))  # 转换_id为id
-        
-        return ResponseModel[Content](
-            data=Content(**created_content),
-            message="内容创建成功"
-        )
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"创建内容失败: {str(e)}")
-
-@app.get("/content/{content_type}/{id}")
-async def get_content(content_type: ContentType, id: str):
-    """获取指定ID的内容"""
-    try:
-        collection = db.db[content_type]
-        content = await collection.find_one({"_id": ObjectId(id)})
-        if not content:
-            raise HTTPException(status_code=404, detail="内容不存在")
-        
-        # 转换_id为id
-        content["id"] = str(content.pop("_id"))
-        
-        return ResponseModel[Content](
-            data=Content(**content),
-            message="获取内容成功"
-        )
-    except bson_errors.InvalidId:
-        raise HTTPException(status_code=400, detail="无效的ID格式")
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@app.get("/content/{content_type}/")
-async def list_contents(
-    content_type: ContentType, 
-    category: str = None,
-    is_hot: Optional[bool] = None,
-    brief: bool = False,
-    skip: int = 0, 
-    limit: int = 20
-):
-    """列出内容，支持按领域筛选、热门筛选和分页"""
-    try:
-        collection = db.db[content_type]
-        query = {"content_type": content_type}
-        if category:
-            query["category.name"] = category
-        if is_hot is not None:
-            query["is_hot"] = is_hot
-            
-        # 设置投影，如果brief为True则排除content字段
-        projection = {"content": 0} if brief else None
-
-        total = await collection.count_documents(query)
-        cursor = collection.find(query, projection).skip(skip).limit(limit)
-        contents = await cursor.to_list(length=limit)
-        
-        # 转换所有文档的_id为id
-        for content in contents:
-            content["id"] = str(content.pop("_id"))
-            # 如果是brief模式且content字段被排除，添加空的content字段以满足验证
-            if brief and "content" not in content:
-                content["content"] = None
-        
-        return ResponseModel[List[Content]](
-            data=[Content(**content) for content in contents],
-            message="获取内容列表成功",
-            meta={
-                "total": total,
-                "skip": skip,
-                "limit": limit
-            }
-        )
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@app.put("/content/{content_type}/{id}")
-async def update_content(content_type: ContentType, id: str, content: Content):
-    """更新指定ID的内容"""
-    try:
-        collection = db.db[content_type]
-        update_data = content.model_dump(exclude={"id"})
-        update_data["updated_at"] = int(datetime.now().timestamp())
-        
-        result = await collection.find_one_and_update(
-            {"_id": ObjectId(id)},
-            {"$set": update_data},
-            return_document=True
-        )
-        
-        if not result:
-            raise HTTPException(status_code=404, detail="内容不存在")
-            
-        # 转换_id为id
-        result["id"] = str(result.pop("_id"))
-        
-        return ResponseModel[Content](
-            data=Content(**result),
-            message="内容更新成功"
-        )
-    except bson_errors.InvalidId:
-        raise HTTPException(status_code=400, detail="无效的ID格式")
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@app.delete("/content/{content_type}/{id}")
-async def delete_content(content_type: ContentType, id: str):
-    """删除指定ID的内容"""
-    try:
-        collection = db.db[content_type]
-        result = await collection.delete_one({"_id": ObjectId(id)})
-        if result.deleted_count == 0:
-            raise HTTPException(status_code=404, detail="内容不存在")
-        return ResponseModel(message="内容删除成功")
-    except bson_errors.InvalidId:
-        raise HTTPException(status_code=400, detail="无效的ID格式")
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@app.patch("/content/{content_type}/{id}/hot")
-async def set_content_hot_status(
-    content_type: ContentType,
-    id: str,
-    is_hot: bool
-):
-    """设置或取消内容的热门状态"""
-    try:
-        collection = db.db[content_type]
-        result = await collection.find_one_and_update(
-            {"_id": ObjectId(id)},
-            {
-                "$set": {
-                    "is_hot": is_hot,
-                    "updated_at": int(datetime.now().timestamp())
-                }
-            },
-            return_document=True
-        )
-        
-        if not result:
-            raise HTTPException(status_code=404, detail="内容不存在")
-            
-        result["id"] = str(result.pop("_id"))
-        
-        return ResponseModel[Content](
-            data=Content(**result),
-            message="热门状态更新成功"
-        )
-    except bson_errors.InvalidId:
-        raise HTTPException(status_code=400, detail="无效的ID格式")
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     """渲染首页"""
@@ -259,25 +94,4 @@ async def home(request: Request):
             "next_update_date": next_update_date
         }
     )
-
-@app.get("/hot/{content_type}")
-async def get_hot_content(content_type: ContentType, brief: bool = False):
-    try:
-        if content_type == ContentType.INFORMATION:
-            info_list = await get_hot_information()
-        elif content_type == ContentType.GUIDE:
-            guide_list = await get_hot_guides()
-            
-        # 设置投影，如果brief为True则排除content字段
-        projection = {"content": 0} if brief else None
-
-        # 使用content api的list_contents方法
-        contents = await list_contents(content_type, is_hot=True, brief=brief)
-        
-        return ResponseModel[List[Content]](
-            data=contents.data,
-            message="获取热门内容成功"
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 

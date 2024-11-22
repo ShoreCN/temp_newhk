@@ -57,3 +57,4 @@ async def information_edit_page(request: Request, id: str = None):
             "content": content
         }
     )
+
