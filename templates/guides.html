@@ -112,6 +112,7 @@
             background-color: #ffffff;
             border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .rate-table th,
@@ -125,6 +126,10 @@
             background-color: #f7fafc;
             color: #2d3748;
             font-weight: 600;
+        }
+
+        .rate-table td {
+            color: #4a5568;
         }
 
         .rate-value {
@@ -178,6 +183,46 @@
             gap: 8px;
         }
 
+        /* 过滤控件样式 */
+        .filter-controls {
+            margin: 0 0 20px 0;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 0 4px;
+        }
+
+        .filter-controls select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            color: #2d3748;
+            border: 1px solid #e2e8f0;
+            min-width: 120px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .filter-controls select:hover {
+            border-color: #4299e1;
+        }
+
+        .filter-controls select:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+
+        .metric {
+            margin-left: 8px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background-color: #ebf8ff;
+            color: #3182ce;
+            font-size: 12px;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 12px;
@@ -224,28 +269,96 @@
             <div class="guide-content">
                 {% if guide.content %}
                     {% if guide.content.description %}
-                    <div class="guide-description">{{ guide.content.description }}</div>
+                    <p>{{ guide.content.description }}</p>
                     {% endif %}
                     
                     {% if guide.content.instructions %}
-                    <div class="guide-instructions">{{ guide.content.instructions }}</div>
+                    <p>{{ guide.content.instructions }}</p>
                     {% endif %}
                     
-                    {% if guide.content.data_table %}
-                    <table class="rate-table">
-                        <tbody>
+                    {% if guide.topic == "香港银行定存利率" %}
+                        <div class="filter-controls">
+                            <select id="currencyFilter-{{guide.id}}">
+                                <option value="">全部币种</option>
+                                <option value="HKD" selected>港币 (HKD)</option>
+                                <option value="USD">美元 (USD)</option>
+                                <option value="RMB">人民币 (RMB)</option>
+                            </select>
+                            <select id="periodFilter-{{guide.id}}">
+                                <option value="">全部期限</option>
+                                <option value="1 month">1个月</option>
+                                <option value="3 months">3个月</option>
+                                <option value="6 months" selected>6个月</option>
+                            </select>
+                            <select id="amountFilter-{{guide.id}}">
+                                <option value="">全部金额</option>
+                                <option value="10,000" selected>10,000</option>
+                                <option value="100,000">100,000</option>
+                                <option value="1,000,000">1,000,000</option>
+                            </select>
+                        </div>
+                        <table class="rate-table">
+                            <thead>
+                                <tr>
+                                    <th>银行</th>
+                                    <th>币种</th>
+                                    <th>金额</th>
+                                    <th>期限</th>
+                                    <th>利率</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for bank in guide.content.data_table %}
+                                    {% if bank.metrics and bank.metrics.deposit_rate_list %}
+                                        {% for rate in bank.metrics.deposit_rate_list %}
+                                        <tr>
+                                            <td>{{ bank.name }}</td>
+                                            <td>{{ rate.currency }}</td>
+                                            <td>{{ rate.amount }}</td>
+                                            <td>{{ rate.period }}</td>
+                                            <td class="rate-value">
+                                                {%- if rate.rate -%}
+                                                    {{ "{:.2f}".format(rate.rate|float * 100) }}%
+                                                {%- else -%}
+                                                    0.00%
+                                                {%- endif -%}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% elif guide.topic == "香港IT行业薪资报告" %}
+                        <table class="rate-table">
+                            <thead>
+                                <tr>
+                                    <th>职位</th>
+                                    <th>薪资范围</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in guide.content.data_table %}
+                                <tr>
+                                    <td>{{ item.name }}</td>
+                                    <td class="rate-value">{{ item.metrics.salary_range }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        {% if guide.content.data_table %}
                             {% for item in guide.content.data_table %}
-                            <tr>
-                                <td>{{ item.name }}</td>
+                            <div class="list-item">
+                                <span>{{ item.name }}</span>
                                 {% if item.metrics %}
                                     {% for key, value in item.metrics.items() %}
-                                    <td class="rate-value">{{ value }}</td>
+                                    <span class="metric">{{ value }}</span>
                                     {% endfor %}
                                 {% endif %}
-                            </tr>
+                            </div>
                             {% endfor %}
-                        </tbody>
-                    </table>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
             </div>
@@ -303,6 +416,99 @@
                 }
             }
         }
+
+        function filterRates(guideId) {
+            const currency = document.getElementById(`currencyFilter-${guideId}`).value;
+            const period = document.getElementById(`periodFilter-${guideId}`).value;
+            const amount = document.getElementById(`amountFilter-${guideId}`).value;
+            
+            const tables = document.querySelectorAll('.rate-table');
+            tables.forEach(table => {
+                if (!table.querySelector('th')?.textContent.includes('银行')) return; // 只处理银行利率表
+                
+                const rows = table.querySelectorAll('tbody tr');
+                const headers = table.querySelectorAll('th');
+                const columnIndexes = {
+                    currency: 1, // 币种列索引
+                    amount: 2,   // 金额列索引
+                    period: 3    // 期限列索引
+                };
+                
+                // 隐藏/显示列
+                const hideColumns = {
+                    currency: !!currency,
+                    amount: !!amount,
+                    period: !!period
+                };
+                
+                // 处理表头
+                Object.entries(hideColumns).forEach(([col, hide]) => {
+                    const index = columnIndexes[col];
+                    if (hide) {
+                        headers[index].style.display = 'none';
+                    } else {
+                        headers[index].style.display = '';
+                    }
+                });
+                
+                // 处理数据行
+                rows.forEach(row => {
+                    const cells = row.cells;
+                    const rowCurrency = cells[columnIndexes.currency].textContent.trim();
+                    const rowAmount = cells[columnIndexes.amount].textContent.trim();
+                    const rowPeriod = cells[columnIndexes.period].textContent.trim();
+                    
+                    // 判断是否显示该行
+                    const showRow = (!currency || rowCurrency === currency) &&
+                                  (!amount || rowAmount === amount) &&
+                                  (!period || rowPeriod === period);
+                    
+                    row.style.display = showRow ? '' : 'none';
+                    
+                    // 隐藏/显示单元格
+                    Object.entries(hideColumns).forEach(([col, hide]) => {
+                        const index = columnIndexes[col];
+                        if (hide) {
+                            cells[index].style.display = 'none';
+                        } else {
+                            cells[index].style.display = '';
+                        }
+                    });
+                });
+                
+                // 更新表格样式
+                const visibleRows = Array.from(rows).filter(r => r.style.display !== 'none');
+                visibleRows.forEach((row, index) => {
+                    const cells = row.querySelectorAll('td');
+                    cells.forEach(cell => {
+                        if (index === visibleRows.length - 1) {
+                            cell.style.borderBottom = 'none';
+                        } else {
+                            cell.style.borderBottom = '1px solid #e2e8f0';
+                        }
+                    });
+                });
+            });
+        }
+
+        // 页面加载完成后初始化过滤器
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有包含过滤器的攻略卡片
+            document.querySelectorAll('.guide-card').forEach(card => {
+                const guideId = card.querySelector('.btn-edit')?.getAttribute('onclick')?.match(/id=([^']+)/)?.[1];
+                if (!guideId) return;
+                
+                ['currencyFilter', 'periodFilter', 'amountFilter'].forEach(filterId => {
+                    const filter = document.getElementById(`${filterId}-${guideId}`);
+                    if (filter) {
+                        filter.addEventListener('change', () => filterRates(guideId));
+                    }
+                });
+                
+                // 立即触发过滤
+                filterRates(guideId);
+            });
+        });
     </script>
 </body>
 </html> 
