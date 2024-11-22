@@ -301,6 +301,9 @@
         function updateContentItem(index, field, value) {
             if (field.includes('.')) {
                 const [parent, child] = field.split('.');
+                if (!contentItems[index][parent]) {
+                    contentItems[index][parent] = {};
+                }
                 contentItems[index][parent][child] = value;
             } else {
                 contentItems[index][field] = value;
@@ -316,7 +319,7 @@
                     <div class="form-group">
                         <input type="text" class="form-input" 
                                placeholder="名称"
-                               value="${item.name}"
+                               value="${item.name || ''}"
                                onchange="updateContentItem(${index}, 'name', this.value)">
                     </div>
                     <div class="form-group">
@@ -327,10 +330,8 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">指标 (可选)</label>
-                        <div class="metrics-container">
-                            <input type="text" class="form-input" 
-                                   placeholder="指标名称"
-                                   onchange="addMetric(${index}, this.value)">
+                        <div class="metrics-container" id="metrics-${index}">
+                            ${renderMetricsHTML(index, item.metrics || {})}
                         </div>
                     </div>
                 </div>
@@ -338,22 +339,8 @@
             updatePreview();
         }
         
-        function addMetric(itemIndex, metricName) {
-            if (!metricName) return;
-            
-            if (!contentItems[itemIndex].metrics) {
-                contentItems[itemIndex].metrics = {};
-            }
-            
-            contentItems[itemIndex].metrics[metricName] = '';
-            renderMetrics(itemIndex);
-        }
-        
-        function renderMetrics(itemIndex) {
-            const metricsContainer = document.querySelector(`.content-item:nth-child(${itemIndex + 1}) .metrics-container`);
-            const metrics = contentItems[itemIndex].metrics;
-            
-            metricsContainer.innerHTML = Object.entries(metrics).map(([key, value]) => `
+        function renderMetricsHTML(itemIndex, metrics) {
+            const metricsHtml = Object.entries(metrics).map(([key, value]) => `
                 <div class="metric-input-group">
                     <span>${key}</span>
                     <input type="text" class="form-input"
@@ -361,22 +348,54 @@
                            onchange="updateMetric(${itemIndex}, '${key}', this.value)">
                     <span class="delete-metric" onclick="deleteMetric(${itemIndex}, '${key}')">×</span>
                 </div>
-            `).join('') + `
-                <input type="text" class="form-input" 
-                       placeholder="指标名称"
-                       onchange="addMetric(${itemIndex}, this.value)">
+            `).join('');
+
+            return `
+                ${metricsHtml}
+                <div class="metric-input-group">
+                    <input type="text" class="form-input" 
+                           placeholder="输入指标名称后按回车"
+                           onkeydown="if(event.key === 'Enter') { event.preventDefault(); addMetric(${itemIndex}, this.value); this.value = ''; }">
+                </div>
             `;
         }
         
+        function renderMetrics(itemIndex) {
+            const metricsContainer = document.querySelector(`#metrics-${itemIndex}`);
+            if (!metricsContainer) return;
+            
+            const metrics = contentItems[itemIndex].metrics || {};
+            metricsContainer.innerHTML = renderMetricsHTML(itemIndex, metrics);
+        }
+        
+        function addMetric(itemIndex, metricName) {
+            if (!metricName.trim()) return;
+            
+            if (!contentItems[itemIndex].metrics) {
+                contentItems[itemIndex].metrics = {};
+            }
+            
+            // 如果该指标名称不存在，则添加
+            if (!contentItems[itemIndex].metrics[metricName]) {
+                contentItems[itemIndex].metrics[metricName] = '';
+                renderMetrics(itemIndex);
+            }
+        }
+        
         function updateMetric(itemIndex, metricName, value) {
+            if (!contentItems[itemIndex].metrics) {
+                contentItems[itemIndex].metrics = {};
+            }
             contentItems[itemIndex].metrics[metricName] = value;
             updatePreview();
         }
         
         function deleteMetric(itemIndex, metricName) {
-            delete contentItems[itemIndex].metrics[metricName];
-            renderMetrics(itemIndex);
-            updatePreview();
+            if (contentItems[itemIndex].metrics) {
+                delete contentItems[itemIndex].metrics[metricName];
+                renderMetrics(itemIndex);
+                updatePreview();
+            }
         }
         
         function updatePreview() {
@@ -391,11 +410,6 @@
                             <div class="news-item">
                                 <div class="news-item-content">
                                     <div class="news-item-title">${item.name}</div>
-                                    <div class="news-item-metrics">
-                                        ${item.metrics.price ? `<span class="metric-tag">${item.metrics.price}</span>` : ''}
-                                        ${item.metrics.sold ? `<span class="metric-tag">销量: ${item.metrics.sold}</span>` : ''}
-                                        ${item.metrics.rating ? `<span class="metric-tag">评分: ${item.metrics.rating}</span>` : ''}
-                                    </div>
                                 </div>
                             </div>
                         `).join('')}
@@ -455,7 +469,10 @@
                 
                 // 设置内容项
                 if(content.content) {
-                    contentItems = content.content;
+                    contentItems = content.content.map(item => ({
+                        ...item,
+                        metrics: item.metrics || {} // 确保metrics存在
+                    }));
                     renderContentItems();
                 }
                 
