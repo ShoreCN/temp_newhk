@@ -58,3 +58,51 @@ async def information_edit_page(request: Request, id: str = None):
         }
     )
 
+@router.get("/guides", response_class=HTMLResponse)
+async def guides_page(request: Request):
+    # 获取所有分类
+    categories = await get_categories()
+    
+    # 获取指南内容
+    client = AsyncIOMotorClient(settings.MONGODB_URL)
+    db = client[settings.DATABASE_NAME]
+    cursor = db.guide.find(
+        {},
+    ).sort("created_at", -1)
+    guides_list = await cursor.to_list(length=20)
+    # 转换所有文档的_id为id
+    for content in guides_list:
+        content["id"] = str(content.pop("_id"))
+    
+    return templates.TemplateResponse(
+        "guides.html",
+        {
+            "request": request,
+            "categories": categories,
+            "guides_list": guides_list
+        }
+    )
+
+@router.get("/guides/edit", response_class=HTMLResponse)
+async def guides_edit_page(request: Request, id: str = None):
+    # 获取所有分类
+    categories = await get_categories()
+    
+    # 如果提供了id,获取现有内容
+    content = None
+    if id:
+        client = AsyncIOMotorClient(settings.MONGODB_URL)
+        db = client[settings.DATABASE_NAME]
+        content = await db.guide.find_one({"_id": ObjectId(id)})
+        if content:
+            content["id"] = str(content.pop("_id"))
+    
+    return templates.TemplateResponse(
+        "guides_edit.html",
+        {
+            "request": request,
+            "categories": categories,
+            "content": content
+        }
+    )
+

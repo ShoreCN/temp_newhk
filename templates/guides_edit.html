@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">{{ "编辑指南" if content else "新建指南" }}</h1>
+    
+    <form id="guideForm" class="space-y-6">
+        {% if content %}
+        <input type="hidden" name="id" value="{{ content.id }}">
+        {% endif %}
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700">标题</label>
+            <input type="text" name="title" value="{{ content.title if content else '' }}" 
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">分类</label>
+            <select name="category" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                {% for category in categories %}
+                <option value="{{ category.id }}" 
+                        {{ 'selected' if content and content.category == category.id else '' }}>
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">摘要</label>
+            <textarea name="summary" rows="3" 
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">{{ content.summary if content else '' }}</textarea>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">内容</label>
+            <textarea name="content" id="editor" rows="10" 
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">{{ content.content if content else '' }}</textarea>
+        </div>
+
+        <div class="flex justify-end space-x-4">
+            <button type="button" onclick="window.location.href='/guides'" 
+                    class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                取消
+            </button>
+            <button type="submit" 
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                保存
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // 这里可以添加表单提交的JavaScript代码
+    // 类似于information_edit.html中的代码
+</script>
+{% endblock %} 

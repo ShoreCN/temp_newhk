@@ -7,7 +7,7 @@ from app.core.config import settings
 
 class ContentType(str, Enum):
     INFORMATION = "information"
-    GUIDE = "guide"
+    GUIDES = "guides"
 
 # class ContentCategory(BaseModel):
 #     name: str
@@ -66,7 +66,7 @@ async def get_hot_information():
 async def get_hot_guides():
     client = AsyncIOMotorClient(settings.MONGODB_URL)
     db = client[settings.DATABASE_NAME]
-    cursor = db.guide.find(
+    cursor = db.guides.find(
         {"is_hot": True},
         {'_id': 0}
     ).sort("created_at", -1)

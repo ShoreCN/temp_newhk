@@ -4,46 +4,47 @@ import asyncio
 import sys
 sys.path.append(".")  # 添加项目根目录到路径
 from app.core.config import settings
+from app.models.content import ContentType
 
 sample_data_category = [
     {
         "name": "daily",
-        "category_type": "information",
+        "category_type": ContentType.INFORMATION,
         "description": "日常生活中常用的各类产品"
     },
     {
         "name": "shopping",
-        "category_type": "information",
+        "category_type": ContentType.INFORMATION,
         "description": "香港购物各类资讯"
     },
     {
         "name": "news",
-        "category_type": "information",
+        "category_type": ContentType.INFORMATION,
         "description": "香港新闻资讯"
     },
     {
         "name": "bank",
-        "category_type": "guide",
+        "category_type": ContentType.GUIDES,
         "description": "香港银行相关攻略"
     },
     {
         "name": "insurance",
-        "category_type": "guide",
+        "category_type": ContentType.GUIDES,
         "description": "香港保险相关攻略"
     },
     {
         "name": "tax",
-        "category_type": "guide",
+        "category_type": ContentType.GUIDES,
         "description": "香港税务相关攻略"
     },
     {
         "name": "job",
-        "category_type": "guide",
+        "category_type": ContentType.GUIDES,
         "description": "香港求职相关攻略"
     },
     {
         "name": "life",
-        "category_type": "guide",
+        "category_type": ContentType.GUIDES,
         "description": "香港生活相关攻略"
     }
 ]
@@ -51,7 +52,7 @@ sample_data_category = [
 sample_data = [
     # 热门资讯类内容1
     {
-        "content_type": "information",
+        "content_type": ContentType.INFORMATION,
         "category": "daily",
         "topic": "港区app下载榜单📱",
         "tags": ["购物", "必备", "游戏", "生活", "旅游"],
@@ -112,7 +113,7 @@ sample_data = [
 
     # 热门资讯类内容2
     {
-        "content_type": "information",
+        "content_type": ContentType.INFORMATION,
         "category": "shopping",
         "topic": "每周电子产品热销排行榜",
         "tags": ["电子", "购物", "手机"],
@@ -183,7 +184,7 @@ sample_data = [
 
     # 普通资讯类内容
     {
-        "content_type": "information",
+        "content_type": ContentType.INFORMATION,
         "category": "news",
         "topic": "今日热门新闻📰",
         "tags": ["新闻", "资讯", "香港"],
@@ -228,7 +229,7 @@ sample_data = [
     
     # 热门指南类内容1
     {
-        "content_type": "guide",
+        "content_type": ContentType.GUIDES,
         "category": "bank",
         "topic": "香港银行定存利率",
         "sub_topic": "至高 *4.5%*",
@@ -370,7 +371,7 @@ sample_data = [
     
     # 热门指南类内容2
     {
-        "content_type": "guide",
+        "content_type": ContentType.GUIDES,
         "category": "job",
         "topic": "香港IT行业薪资报告",
         "sub_topic": "最高 *HKD 100,000*",
@@ -411,7 +412,7 @@ sample_data = [
     
     # 普通指南类内容
     {
-        "content_type": "guide",
+        "content_type": ContentType.GUIDES,
         "category": "life",
         "topic": "香港租房攻略",
         "sub_topic": "最低 *$5,000*",
@@ -454,7 +455,7 @@ async def insert_sample_data():
     # 清空现有数据
     await db.category.delete_many({})
     await db.information.delete_many({})
-    await db.guide.delete_many({})
+    await db.guides.delete_many({})
 
     # 插入分类数据, 并设置created_at和updated_at
     for data in sample_data_category:

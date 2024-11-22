@@ -7,7 +7,7 @@ from app.core.config import settings
 
 class CategoryType(str, Enum):
     INFORMATION = "information"
-    GUIDE = "guide"
+    GUIDES = "guides"
 
 class Category(BaseModel):
     id: Optional[str] = None
