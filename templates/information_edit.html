@@ -437,6 +437,71 @@
         
         // 监听标题变化以更新预览
         document.getElementById('topic').addEventListener('input', updatePreview);
+        
+        // 在页面加载时初始化内容
+        window.onload = function() {
+            const content = JSON.parse('{{ content | tojson | safe if content else "null" }}');
+            if (content) {
+                // 设置标题
+                document.getElementById('topic').value = content.topic;
+                // 设置分类
+                document.getElementById('category').value = content.category;
+                
+                // 设置标签
+                if(content.tags) {
+                    tags = content.tags;
+                    renderTags();
+                }
+                
+                // 设置内容项
+                if(content.content) {
+                    contentItems = content.content;
+                    renderContentItems();
+                }
+                
+                // 设置是否热门
+                document.getElementById('isHot').checked = content.is_hot;
+                
+                // 更新预览
+                updatePreview();
+            }
+        }
+        
+        // 修改保存函数,支持更新操作
+        async function saveInformation() {
+            const content = JSON.parse('{{ content | tojson | safe if content else "null" }}');
+            const data = {
+                content_type: "information",
+                category: document.getElementById('category').value,
+                topic: document.getElementById('topic').value,
+                tags: tags,
+                content: contentItems,
+                is_hot: document.getElementById('isHot').checked
+            };
+            
+            try {
+                const url = content ? `/content/information/${content.id}` : '/content/';
+                const method = content ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    alert('保存成功');
+                    window.location.href = '/information';
+                } else {
+                    const error = await response.json();
+                    alert(`保存失败: ${error.message}`);
+                }
+            } catch (error) {
+                alert(`保存失败: ${error.message}`);
+            }
+        }
     </script>
 </body>
 </html> 

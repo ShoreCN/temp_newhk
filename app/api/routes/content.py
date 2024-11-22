@@ -40,12 +40,14 @@ async def information_edit_page(request: Request, id: str = None):
     # 获取所有分类
     categories = await get_categories()
     
-    # 如果提供了id，获取现有内容
+    # 如果提供了id,获取现有内容
     content = None
     if id:
         client = AsyncIOMotorClient(settings.MONGODB_URL)
         db = client[settings.DATABASE_NAME]
         content = await db.information.find_one({"_id": ObjectId(id)})
+        if content:
+            content["id"] = str(content.pop("_id"))
     
     return templates.TemplateResponse(
         "information_edit.html",
