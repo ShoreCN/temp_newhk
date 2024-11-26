@@ -64,6 +64,7 @@ async def list_categories(category_type: Optional[CategoryType] = None, parent_i
         if parent_id:
             query["parent_id"] = parent_id
             
+        total = await collection.count_documents(query)
         cursor = collection.find(query)
         categories = await cursor.to_list(length=100)
         
@@ -72,7 +73,10 @@ async def list_categories(category_type: Optional[CategoryType] = None, parent_i
         
         return ResponseModel[List[Category]](
             data=[Category(**category) for category in categories],
-            message="获取分类列表成功"
+            message="获取分类列表成功",
+            meta={
+                "total": total,
+            }
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
