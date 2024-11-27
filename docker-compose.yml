@@ -10,7 +10,9 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./mongodb/database:/data/db
+      - mongodb_data:/data/db
+      - ./config/mongodb:/data/configdb
+      - ./logs/mongodb:/var/log/mongodb
     networks:
       - newhk-network
 
@@ -33,3 +35,7 @@ services:
 networks:
   newhk-network:
     driver: bridge
+
+volumes:
+  mongodb_data:
+    name: newhk_mongodb_data
