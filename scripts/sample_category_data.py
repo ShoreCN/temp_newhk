@@ -12,42 +12,62 @@ sample_data_category = [
     {
         "name": "daily",
         "category_type": CategoryType.INFORMATION,
-        "description": "日常生活中常用的各类产品"
+        "description": "日常"
+    },
+    {
+        "name": "food",
+        "category_type": CategoryType.INFORMATION,
+        "description": "美食"
+    },
+    {
+        "name": "job",
+        "category_type": CategoryType.INFORMATION,
+        "description": "求职"
+    },
+    {
+        "name": "event",
+        "category_type": CategoryType.INFORMATION,
+        "description": "活动"
     },
     {
         "name": "shopping",
         "category_type": CategoryType.INFORMATION,
-        "description": "香港购物各类资讯"
+        "description": "购物"
     },
     {
         "name": "news",
         "category_type": CategoryType.INFORMATION,
-        "description": "香港新闻资讯"
+        "description": "新闻"
     },
     {
         "name": "bank",
         "category_type": CategoryType.GUIDES,
-        "description": "香港银行相关攻略"
+        "description": "银行"
     },
     {
-        "name": "insurance",
+        "name": "communication",
         "category_type": CategoryType.GUIDES,
-        "description": "香港保险相关攻略"
+        "description": "通讯"
     },
     {
-        "name": "tax",
+        "name": "food",
         "category_type": CategoryType.GUIDES,
-        "description": "香港税务相关攻略"
+        "description": "美食"
+    },
+    {
+        "name": "education",
+        "category_type": CategoryType.GUIDES,
+        "description": "教育"
     },
     {
         "name": "job",
         "category_type": CategoryType.GUIDES,
-        "description": "香港求职相关攻略"
+        "description": "求职"
     },
     {
         "name": "life",
         "category_type": CategoryType.GUIDES,
-        "description": "香港生活相关攻略"
+        "description": "生活"
     }
 ]
 

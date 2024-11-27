@@ -70,7 +70,74 @@ sample_data_information = [
         "next_update_at": int((datetime.now() + timedelta(days=1)).timestamp()),
     }, 
 
-    # 热门资讯类内容2
+    # 热门资讯内容2
+    {
+        "content_type": ContentType.INFORMATION,
+        "category": "food",
+        "topic": "本周美食排行榜",
+        "sub_topic": "香港美食",
+        "tags": ["美食", "香港", "必吃"],
+        "source_list": [
+            {
+                "name": "OpenRice",
+                "link": "https://www.openrice.com",
+                "logo": "https://www.openrice.com/favicon.ico"
+            }
+        ],
+        "content": [
+            {
+                "name": "申子居酒屋",
+                "link": "https://www.openrice.com/restaurant/hk/hongkong/shengzi-izakaya",
+                "remarks": "申子居酒屋，香港知名居酒屋，提供各种日本美食",
+                "metrics": {
+                    "rating": "4.5",
+                    "reviews": 1000
+                }
+            },
+            {
+                "name": "Harlan’s",
+                "link": "https://www.openrice.com/restaurant/hk/hongkong/harlands",
+                "remarks": "Harlan’s，香港知名牛排馆，提供各种牛排美食",
+                "metrics": {
+                    "rating": "4.2",
+                    "reviews": 900
+                }
+            },
+            {
+                "name": "YAKINIKU GREAT SOHO",
+                "link": "https://www.openrice.com/restaurant/hk/hongkong/yakiniku-great-soho",
+                "remarks": "YAKINIKU GREAT SOHO，香港知名烤肉店，提供各种烤肉美食",
+                "metrics": {
+                    "rating": "4.0",
+                    "reviews": 800
+                }
+            },
+            {
+                "name": "普庆餐厅",
+                "link": "https://www.openrice.com/restaurant/hk/hongkong/puking-restaurant",
+                "remarks": "普庆餐厅，香港知名粤菜餐厅，提供各种粤菜美食",
+                "metrics": {
+                    "rating": "4.1",
+                    "reviews": 700
+                }
+            },
+            {
+                "name": "GARIGUETTE",
+                "link": "https://www.openrice.com/restaurant/hk/hongkong/gariguette",
+                "remarks": "GARIGUETTE，香港知名法式餐厅，提供各种法式美食",
+                "metrics": {
+                    "rating": "4.3",
+                    "reviews": 600
+                }
+            }
+        ],
+        "is_hot": True,
+        "created_at": int(datetime.now().timestamp()),
+        "updated_at": int(datetime.now().timestamp()),
+        "next_update_at": int((datetime.now() + timedelta(days=1)).timestamp()),
+    },
+
+    # 热门资讯类内容3
     {
         "content_type": ContentType.INFORMATION,
         "category": "shopping",
@@ -141,7 +208,50 @@ sample_data_information = [
         "next_update_at": int((datetime.now() + timedelta(days=1)).timestamp()),
     },
 
-    # 普通资讯类内容
+    # 普通资讯类内容1
+    {
+        "content_type": ContentType.INFORMATION,
+        "category": "food",
+        "topic": "11月香港美食餐厅推介",
+        "tags": ["美食", "香港", "餐厅"],
+        "source_list": [
+            {
+                "name": "TimeOut",
+                "link": "https://www.timeout.com.hk",
+                "logo": "https://www.timeout.com.hk/favicon.ico"
+            }
+        ],
+        "content": [
+            {
+                "name": "Tozzo：新派甜品咖啡室",
+                "link": "https://www.timeout.com.hk/hongkong/restaurant/tozzo-new-school-dessert-cafe",
+                "remarks": "Tozzo：新派甜品咖啡室，提供各种新派甜品和咖啡",
+            },
+            {
+                "name": "Samsen：中环开第三间分店",
+                "link": "https://www.timeout.com.hk/hongkong/restaurant/samsen-central",
+                "remarks": "Samsen：中环开第三间分店，提供各种泰国美食",
+            },
+            {
+                "name": "日月楼：怀旧京菜馆",
+                "link": "https://www.timeout.com.hk/hongkong/restaurant/the-butcher-s-club",
+                "remarks": "日月楼：怀旧京菜馆，提供各种怀旧京菜",
+            },
+            {
+                "name": "Pecorino：红爆上环",
+                "link": "https://www.timeout.com.hk/hongkong/restaurant/pecorino-red-hot-upper-sheungwan",
+                "remarks": "Pecorino：红爆上环，提供各种意大利美食",
+            },
+            {
+                "name": "The Butcher's Club",
+                "link": "https://www.timeout.com.hk/hongkong/restaurant/the-butcher-s-club",
+                "remarks": "The Butcher's Club，提供各种高品质肉类和海鲜",
+            }
+        ],
+        "is_hot": False,
+    },
+
+    # 普通资讯类内容2
     {
         "content_type": ContentType.INFORMATION,
         "category": "news",
@@ -165,7 +275,7 @@ sample_data_information = [
                 "remarks": "屯门公路车祸，1死1伤",
             },
             {
-                "name": "香港迪士尼乐园 | 12月1日起恢复营业",
+                "name": "屯门友爱村谋杀案",
                 "link": "https://www.hk01.com/news/1800000000000000",
                 "remarks": "香港迪士尼乐园12月1日起恢复营业",
             },
