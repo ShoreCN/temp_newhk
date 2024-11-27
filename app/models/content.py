@@ -50,8 +50,9 @@ class Content(BaseModel):
     created_at: int = Field(default_factory=lambda: int(datetime.now().timestamp()))
     updated_at: int = Field(default_factory=lambda: int(datetime.now().timestamp()))
     is_hot: bool = Field(default=False, description="是否为热门内容")
+    update_interval: Optional[int] = Field(default=86400, description="更新间隔，单位为秒") # 默认每天更新一次
     next_update_at: Optional[int] = Field(
-        default_factory=lambda: int((datetime.now() + timedelta(days=1)).timestamp())
+        default_factory=lambda: int((datetime.now() + timedelta(seconds=86400)).timestamp())
     )
 
 async def get_hot_information():

@@ -277,7 +277,7 @@ sample_data_information = [
             {
                 "name": "屯门友爱村谋杀案",
                 "link": "https://www.hk01.com/news/1800000000000000",
-                "remarks": "香港迪士尼乐园12月1日起恢复营业",
+                "remarks": "屯门友爱村谋杀案，警方正在调查",
             },
             {
                 "name": "恒指低开92点报20334点",
