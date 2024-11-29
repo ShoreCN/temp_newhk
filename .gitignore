@@ -66,6 +66,7 @@ mongodb/database/
 *.swp
 *~
 rss_content.json
+rss_feed_data.json
 
 # 系统文件
 .DS_Store

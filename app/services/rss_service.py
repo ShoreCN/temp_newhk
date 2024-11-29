@@ -25,7 +25,11 @@ class RSSService:
 
     def convert_to_content(self, feed_data: feedparser.FeedParserDict, feed: RSSFeed) -> Content:
         """Convert RSS feed data to Content model"""
-        print(feed_data.keys())
+        # print(feed_data.keys())
+        # import json
+        # with open('rss_feed_data.json', 'w', encoding='utf-8') as f:
+        #     json.dump(feed_data, f, ensure_ascii=False, indent=2)
+
         if not feed_data:
             logger.warning(f"Failed to parse feed: {feed.url}")
             return None
@@ -45,6 +49,7 @@ class RSSService:
                 content_type=feed.content_type,
                 category=feed.category,
                 topic=feed.topic,
+                sub_topic=feed_data.get("feed", {}).get("title", ""),  # 使用数据源的标题作为子主题
                 source_list=[source],
                 data=[]  # Initialize the data list
             )
@@ -73,9 +78,10 @@ class RSSService:
                     content.data.append(ListItem(
                         name=entry["title"],
                         link=entry["link"],
-                        description=entry.get("description", ""),
-                        pub_date=pub_date,
-                        source_list=[source]
+                        metrics={
+                            # "description": entry.get("description", ""),
+                            "pub_date": int(pub_date.timestamp()) if pub_date else None,
+                        }
                     ))
                 
                 except Exception as e:
