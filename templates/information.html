@@ -304,7 +304,7 @@
 
     <div class="information-cards">
         {% for information in information_list %}
-        <div class="information-card">
+        <div class="information-card" data-category="{{ information.category }}">
             <div class="information-header">
                 <div class="information-title-section">
                     <span style="display:none;">Debug ID: {{ information.id }}</span>
@@ -392,6 +392,8 @@
     <script>
         // 分类标签点击处理
         const categoryTags = document.querySelectorAll('.category-tag');
+        const informationCards = document.querySelectorAll('.information-card');
+        
         categoryTags.forEach(tag => {
             tag.addEventListener('click', () => {
                 // 移除其他标签的active类
@@ -399,9 +401,16 @@
                 // 给当前点击的标签添加active类
                 tag.classList.add('active');
                 
-                // TODO: 根据分类筛选容
-                const category = tag.textContent;
-                // filterinformationByCategory(category);
+                const selectedCategory = tag.textContent.trim();
+                
+                // 筛选信息卡片
+                informationCards.forEach(card => {
+                    if (selectedCategory === '全部' || card.dataset.category === selectedCategory) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
             });
         });
         
@@ -481,4 +490,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
