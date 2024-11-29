@@ -325,8 +325,8 @@
                 </div>
             </div>
             <div class="information-content">
-                {% if information.content %}
-                    {% for item in information.content %}
+                {% if information.data %}
+                    {% for item in information.data %}
                     <div class="information-item">
                         {% if item.link %}
                         <a href="{{ item.link }}" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%;">
