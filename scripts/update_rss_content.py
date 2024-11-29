@@ -36,9 +36,6 @@ async def update_rss_content():
                 for content in contents:
                     # Convert content to dict
                     content_dict = content.dict(exclude={'id'})
-                    
-                    # 暂时不写入数据库
-                    break
 
                     # Use topic as unique identifier to avoid duplicates
                     result = await db.information.update_one(

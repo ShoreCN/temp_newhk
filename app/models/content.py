@@ -41,8 +41,8 @@ class GuideData(BaseModel):
 class Content(BaseModel):
     id: Optional[str] = Field(default=None)
     content_type: ContentType
-    category: str
-    topic: str
+    category: str = Field(description="对应产品设计里的领域")
+    topic: str = Field(description="主题")
     sub_topic: Optional[str] = None
     tags: Optional[List[str]] = None
     source_list: Optional[List[Source]] = None
