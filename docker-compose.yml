@@ -32,6 +32,25 @@ services:
     networks:
       - newhk-network
 
+  rss:
+    build:
+      context: .
+      dockerfile: Dockerfile.rss
+    container_name: newhk-rss
+    environment:
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_USERNAME=root
+      - MONGODB_PASSWORD=mongopwd
+      - DATABASE_NAME=newhk
+      # RSS specific configurations
+      - RSS_UPDATE_INTERVAL=3600
+    depends_on:
+      - mongodb
+    networks:
+      - newhk-network
+    restart: always
+
 networks:
   newhk-network:
     driver: bridge

@@ -13,6 +13,9 @@ pymongo==4.9.0
 aioredis==2.0.1
 async-timeout==5.0.1
 
+# RSS Feed Parser
+feedparser==6.0.11
+
 # Utilities
 python-dotenv==1.0.1
 email_validator==2.2.0
