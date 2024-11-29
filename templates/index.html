@@ -216,8 +216,8 @@
             <div class="card-title">
                 <span>{{ info.topic }}</span>
             </div>
-            {% if info.content %}
-                {% for item in info.content %}
+            {% if info.data %}
+                {% for item in info.data %}
                 <div class="list-item">
                     {% if item.link %}
                     <a href="{{ item.link }}" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%;">
@@ -255,13 +255,13 @@
         <div class="card">
             <h3>{{ guide.topic }}</h3>
             <div class="guide-content">
-                {% if guide.content %}
-                    {% if guide.content.description %}
-                    <p>{{ guide.content.description }}</p>
+                {% if guide.data %}
+                    {% if guide.data.description %}
+                    <p>{{ guide.data.description }}</p>
                     {% endif %}
                     
-                    {% if guide.content.instructions %}
-                    <p>{{ guide.content.instructions }}</p>
+                    {% if guide.data.instructions %}
+                    <p>{{ guide.data.instructions }}</p>
                     {% endif %}
                     
                     {% if guide.topic == "香港银行定存利率" %}
@@ -296,7 +296,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for bank in guide.content.data_table %}
+                                {% for bank in guide.data.data_table %}
                                     {% if bank.metrics and bank.metrics.deposit_rate_list %}
                                         {% for rate in bank.metrics.deposit_rate_list %}
                                         <tr>
@@ -326,7 +326,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for item in guide.content.data_table %}
+                                {% for item in guide.data.data_table %}
                                 <tr>
                                     <td>{{ item.name }}</td>
                                     <td class="rate-value">{{ item.metrics.salary_range }}</td>
@@ -335,8 +335,8 @@
                             </tbody>
                         </table>
                     {% else %}
-                        {% if guide.content.data_table %}
-                            {% for item in guide.content.data_table %}
+                        {% if guide.data.data_table %}
+                            {% for item in guide.data.data_table %}
                             <div class="list-item">
                                 <span>{{ item.name }}</span>
                                 {% if item.metrics %}
