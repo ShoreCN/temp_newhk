@@ -105,20 +105,27 @@
         .information-item {
             display: flex;
             align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 12px 12px 40px;  
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background-color: #f8f9fa;
+            position: relative;
         }
-        
-        .information-item:last-child {
-            border-bottom: none;
+
+        .information-item-number {
+            position: absolute;
+            left: 12px;  
+            color: #718096;
+            font-size: 14px;
+            font-weight: 500;
+            width: 20px;  
         }
         
         .information-item-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+            width: 24px;
+            height: 24px;
             margin-right: 12px;
-            object-fit: cover;
+            border-radius: 4px;
         }
         
         .information-item-content {
@@ -328,6 +335,7 @@
                 {% if information.data %}
                     {% for item in information.data %}
                     <div class="information-item">
+                        <span class="information-item-number">{{ loop.index }}</span>
                         {% if item.link %}
                         <a href="{{ item.link }}" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%;">
                         {% endif %}
@@ -437,11 +445,11 @@
             }
             
             try {
-                const response = await fetch(`/content/information/${deleteId}`, {  // 确保URL路径正确
+                const response = await fetch(`/content/information/${deleteId}`, {  
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'  // 添加AJAX标识
+                        'X-Requested-With': 'XMLHttpRequest'  
                     }
                 });
                 
