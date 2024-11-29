@@ -32,7 +32,7 @@ sample_guides_data = [
                 "logo": "https://www.bochk.com/etc/designs/bochk_web/images/logo.png"
             }
         ],
-        "content": {
+        "data": {
             "description": "香港银行定存利率对比",
             "instructions": "",
             "data_table": [
@@ -160,7 +160,7 @@ sample_guides_data = [
                 "link": "https://www.linkedin.com"
             }
         ],
-        "content": {
+        "data": {
             "description": "香港IT行业薪资报告",
             "instructions": "",
             "data_table": [
@@ -199,7 +199,7 @@ sample_guides_data = [
                 "logo": "https://www.hkrent.com/favicon.ico"
             }
         ],
-        "content": {
+        "data": {
             "description": "在香港租房的完整指南",
             "instructions": "1. 选择区域\n2. 预算规划\n3. 中介联系\n4. 看房注意事项",
             "data_table": [

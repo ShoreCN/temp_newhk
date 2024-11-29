@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from app.db.mongodb import db
-from app.models.content import Content, ContentType, get_hot_information, get_hot_guides, GuideContent
+from app.models.content import Content, ContentType, get_hot_information, get_hot_guides
 from app.models.response import ResponseModel, ErrorResponse
 from app.api.routes import category_api, content_page, content_api
 from typing import List, Optional
@@ -20,6 +20,7 @@ async def lifespan(app: FastAPI):
     yield
     # 关闭时
     await db.close_database_connection()
+    print("Database connection closed")
 
 app = FastAPI(
     title="NewHK Content Creation Service",

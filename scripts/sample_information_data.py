@@ -22,7 +22,7 @@ sample_data_information = [
                 "logo": "https://www.apple.com/favicon.ico"
             }
         ],
-        "content": [
+        "data": [
             {
                 "name": "7-Eleven HK",
                 "link": "https://apps.apple.com/app/id1516486887",
@@ -84,7 +84,7 @@ sample_data_information = [
                 "logo": "https://www.openrice.com/favicon.ico"
             }
         ],
-        "content": [
+        "data": [
             {
                 "name": "申子居酒屋",
                 "link": "https://www.openrice.com/restaurant/hk/hongkong/shengzi-izakaya",
@@ -150,7 +150,7 @@ sample_data_information = [
                 "logo": "https://price.com.hk/favicon.ico"
             }
         ],
-        "content": [
+        "data": [
             {
                 "name": "MOMAX 10000mAh 流动电源",
                 "link": "https://www.taobao.com/product/10000mAh-MOMAX-Power-Bank-Black-10000mAh-MOMAX-Power-Bank-Black.html",
@@ -221,7 +221,7 @@ sample_data_information = [
                 "logo": "https://www.timeout.com.hk/favicon.ico"
             }
         ],
-        "content": [
+        "data": [
             {
                 "name": "Tozzo：新派甜品咖啡室",
                 "link": "https://www.timeout.com.hk/hongkong/restaurant/tozzo-new-school-dessert-cafe",
@@ -263,7 +263,7 @@ sample_data_information = [
                 "link": "https://www.hk01.com",
             }
         ],
-        "content": [
+        "data": [
             {
                 "name": "桃芝风球 | 周四或周五影响香港",
                 "link": "https://www.hk01.com/news/1800000000000000",

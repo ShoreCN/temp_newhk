@@ -33,7 +33,7 @@ class DataTable(BaseModel):
     name: str
     details: List[DataTableItem] = None
 
-class GuideContent(BaseModel):
+class GuideData(BaseModel):
     description: str
     instructions: Optional[str] = None  # 操作指南, 后续可考虑用DSL来实现
     data_table: List[DataTableItem] = None # 目前版本每个指南的数据详情只有一张表 TODO: 后续支持多张表
@@ -46,7 +46,7 @@ class Content(BaseModel):
     sub_topic: Optional[str] = None
     tags: Optional[List[str]] = None
     source_list: Optional[List[Source]] = None
-    content: Union[List[ListItem], GuideContent, None]
+    data: Union[List[ListItem], GuideData, None]
     created_at: int = Field(default_factory=lambda: int(datetime.now().timestamp()))
     updated_at: int = Field(default_factory=lambda: int(datetime.now().timestamp()))
     is_hot: bool = Field(default=False, description="是否为热门内容")

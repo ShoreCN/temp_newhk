@@ -71,7 +71,7 @@ async def list_contents(
         if is_hot is not None:
             query["is_hot"] = is_hot
             
-        projection = {"content": 0} if brief else None
+        projection = {"data": 0} if brief else None
 
         total = await collection.count_documents(query)
         cursor = collection.find(query, projection).skip(skip).limit(limit)
@@ -79,8 +79,8 @@ async def list_contents(
         
         for content in contents:
             content["id"] = str(content.pop("_id"))
-            if brief and "content" not in content:
-                content["content"] = None
+            if brief and "data" not in content:
+                content["data"] = None
         
         return ResponseModel[List[Content]](
             data=[Content(**content) for content in contents],
