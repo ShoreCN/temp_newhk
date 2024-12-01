@@ -116,4 +116,7 @@ class RSSService:
         for feed in self.feeds:
             contents = await self.fetch_content(feed)
             all_contents.extend(contents)
+
+            # 打印任务完成信息
+            logger.info(f"Finished fetching content for {feed.topic}")
         return all_contents

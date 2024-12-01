@@ -27,6 +27,32 @@ class RSSConfig(BaseSettings):
             "name": "HK 01",
             "logo": "https://hk01.com/favicon.ico",
             "topic": "香港01热门新闻"
+        },
+        # OpenRice系列
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "food",
+            "url": "https://rsshub.ktachibana.party/openrice/zh/hongkong/explore/chart/most-bookmarked",
+            "name": "OpenRice",
+            "logo": "https://www.openrice.com/favicon.ico",
+            "topic": "香港最多收藏餐廳排行榜"
+        },
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "food",
+            "url": "https://rsshub.ktachibana.party/openrice/zh/hongkong/offers",
+            "name": "OpenRice",
+            "logo": "https://www.openrice.com/favicon.ico",
+            "topic": "香港美食优惠活动"
+        },
+        # 香港经济日报系列
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "news",
+            "url": "https://rsshub.ktachibana.party/hket/sran001",
+            "name": "香港经济日报",
+            "logo": "https://www.hket.com/favicon.ico",
+            "topic": "香港经济日报: 香港"
         }
     ]
     RSS_UPDATE_INTERVAL: int = 3600  # 默认每小时更新一次

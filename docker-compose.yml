@@ -49,8 +49,8 @@ services:
       - mongodb
     networks:
       - newhk-network
-    restart: always
-
+    # restart: always # 本地调试时避免重复启动, 暂时注释 TODO: 后续用任务机制替换常驻服务
+    
 networks:
   newhk-network:
     driver: bridge

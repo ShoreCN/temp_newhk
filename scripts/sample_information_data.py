@@ -13,7 +13,7 @@ sample_data_information = [
     {
         "content_type": ContentType.INFORMATION,
         "category": "daily",
-        "topic": "港区app下载榜单📱",
+        "topic": "港区app下载榜单📱(Mock)",
         "tags": ["购物", "必备", "游戏", "生活", "旅游"],
         "source_list": [
             {
@@ -74,7 +74,7 @@ sample_data_information = [
     {
         "content_type": ContentType.INFORMATION,
         "category": "food",
-        "topic": "本周美食排行榜",
+        "topic": "本周美食排行榜(Mock)",
         "sub_topic": "香港美食",
         "tags": ["美食", "香港", "必吃"],
         "source_list": [
@@ -141,7 +141,7 @@ sample_data_information = [
     {
         "content_type": ContentType.INFORMATION,
         "category": "shopping",
-        "topic": "每周电子产品热销排行榜",
+        "topic": "每周电子产品热销排行榜(Mock)",
         "tags": ["电子", "购物", "手机"],
         "source_list": [
             {
@@ -212,7 +212,7 @@ sample_data_information = [
     {
         "content_type": ContentType.INFORMATION,
         "category": "food",
-        "topic": "11月香港美食餐厅推介",
+        "topic": "11月香港美食餐厅推介(Mock)",
         "tags": ["美食", "香港", "餐厅"],
         "source_list": [
             {
@@ -255,7 +255,7 @@ sample_data_information = [
     {
         "content_type": ContentType.INFORMATION,
         "category": "news",
-        "topic": "今日热门新闻📰",
+        "topic": "今日热门新闻📰(Mock)",
         "tags": ["新闻", "资讯", "香港"],
         "source_list": [
             {
