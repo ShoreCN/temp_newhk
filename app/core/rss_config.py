@@ -81,6 +81,22 @@ class RSSConfig(BaseSettings):
         ############################################
         #               求职类(job)RSS              #
         ############################################
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "job",
+            "url": "https://rsshub.ktachibana.party/v2ex/tab/jobs",
+            "name": "V2EX",
+            "logo": "https://v2ex.com/favicon.ico",
+            "topic": "V2EX-求职: 最新话题"
+        },
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "job",
+            "url": "https://rsshub.speednet.icu/eleduck/posts/5",
+            "name": "电鸭社区",
+            "logo": "https://v2ex.com/favicon.ico",
+            "topic": "电鸭社区招聘&找人栏目最新话题"
+        },
 
         ############################################
         #               购物类(shopping)RSS         #
