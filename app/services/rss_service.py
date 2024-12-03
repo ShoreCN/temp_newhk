@@ -143,4 +143,7 @@ class RSSService:
 
             # 打印任务完成信息
             logger.info(f"Finished fetching content for {feed.topic}")
+            
+            # 拉取完每条任务后等待5秒
+            await asyncio.sleep(5)
         return all_contents

@@ -101,6 +101,14 @@ class RSSConfig(BaseSettings):
             "logo": "https://www.openrice.com/favicon.ico",
             "topic": "香港餐厅热门活动"
         },
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "food",
+            "relative_path": "/esquirehk/tag/Food%20&%20Drinks",
+            "name": "EsquireHK",
+            "logo": "https://www.esquirehk.com/favicon/favicon.ico",
+            "topic": "EsquireHK美食推荐"
+        },
 
         ############################################
         #               求职类(job)RSS              #
@@ -140,6 +148,26 @@ class RSSConfig(BaseSettings):
             "name": "ePrice.HK",
             "logo": "https://eprice.hk/favicon.ico",
             "topic": "ePrice最新消息"
+        },
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "shopping",
+            "relative_path": "/esquirehk/tag/Fashion",
+            "name": "EsquireHK",
+            "logo": "https://www.esquirehk.com/favicon/favicon.ico",
+            "topic": "EsquireHK潮流资讯"
+        },
+
+        ############################################
+        #               活动类(event)RSS            #
+        ############################################
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "event",
+            "relative_path": "/esquirehk/tag/travel",
+            "name": "EsquireHK",
+            "logo": "https://www.esquirehk.com/favicon/favicon.ico",
+            "topic": "EsquireHK游玩资讯"
         },
 
         ############################################
