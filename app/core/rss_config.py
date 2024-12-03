@@ -95,7 +95,7 @@ class RSSConfig(BaseSettings):
             "url": "https://rsshub.ktachibana.party/v2ex/tab/jobs",
             "name": "V2EX",
             "logo": "https://v2ex.com/favicon.ico",
-            "topic": "V2EX-求职: 最新话题"
+            "topic": "V2EX工作板块最新话题"
         },
         {
             "content_type": ContentType.INFORMATION,
@@ -109,6 +109,14 @@ class RSSConfig(BaseSettings):
         ############################################
         #               购物类(shopping)RSS         #
         ############################################
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "shopping",
+            "url": "https://rsshub.ktachibana.party/eprice/hk",
+            "name": "ePrice.HK",
+            "logo": "https://eprice.hk/favicon.ico",
+            "topic": "ePrice最新消息"
+        },
 
         ############################################
         #               生活类(life)RSS             #
