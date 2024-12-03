@@ -102,7 +102,7 @@ class RSSConfig(BaseSettings):
             "category": "job",
             "url": "https://rsshub.speednet.icu/eleduck/posts/5",
             "name": "电鸭社区",
-            "logo": "https://v2ex.com/favicon.ico",
+            "logo": "https://static.eleduck.com/_next/static/media/icon-500.d77f6cfc.png",
             "topic": "电鸭社区招聘&找人栏目最新话题"
         },
 
