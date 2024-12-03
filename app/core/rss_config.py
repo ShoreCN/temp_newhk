@@ -166,6 +166,14 @@ class RSSConfig(BaseSettings):
             "logo": "https://www.esquirehk.com/favicon/favicon.ico",
             "topic": "EsquireHK潮流资讯"
         },
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "shopping",
+            "relative_path": "/youtube/user/%40pricehongkongofficial",
+            "name": "YouTube",
+            "logo": "https://www.youtube.com/s/desktop/ceaca137/img/logos/favicon_48x48.png",
+            "topic": "Price.com.hk 香港格價網 - YouTube"
+        },
 
         ############################################
         #               活动类(event)RSS            #
