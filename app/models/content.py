@@ -23,6 +23,7 @@ class Source(BaseModel):
     name: str
     link: str
     logo: Optional[str] = None
+    rss_path: Optional[str] = None
 
 class DataTableItem(BaseModel):
     name: str

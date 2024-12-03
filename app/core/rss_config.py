@@ -1,16 +1,40 @@
 from typing import Dict, List
+from enum import Enum
 from pydantic_settings import BaseSettings
 from app.models.content import ContentType
+
+class FetchMode(str, Enum):
+    PRIORITY = "priority"
+    RANDOM = "random"
+
+class RSSBaseUrl(BaseSettings):
+    url: str
+    priority: int = 1
+    enabled: bool = True
 
 class RSSFeed(BaseSettings):
     content_type: ContentType
     category: str
-    url: str
+    relative_path: str
     name: str
     logo: str
     topic: str
 
 class RSSConfig(BaseSettings):
+    FETCH_MODE: FetchMode = FetchMode.PRIORITY
+    BASE_URL_POOL: List[RSSBaseUrl] = [
+        {
+            "url": "https://rsshub.ktachibana.party",
+            "priority": 1,
+            "enabled": True
+        },
+        {
+            "url": "https://rsshub.speednet.icu",
+            "priority": 2,
+            "enabled": True
+        },
+    ]
+    
     RSS_FEEDS: List[RSSFeed] = [
         ############################################
         #               新闻类(news)RSS             #
@@ -18,7 +42,7 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "news",
-            "url": "https://rsshub.speednet.icu/hk01/latest",
+            "relative_path": "/hk01/latest",
             "name": "HK 01",
             "logo": "https://hk01.com/favicon.ico",
             "topic": "香港01最新新闻"
@@ -26,7 +50,7 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "news",
-            "url": "https://rsshub.speednet.icu/hk01/hot",
+            "relative_path": "/hk01/hot",
             "name": "HK 01",
             "logo": "https://hk01.com/favicon.ico",
             "topic": "香港01热门新闻"
@@ -35,7 +59,7 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "news",
-            "url": "https://rsshub.ktachibana.party/hket/sran001",
+            "relative_path": "/hket/sran001",
             "name": "香港经济日报",
             "logo": "https://www.hket.com/favicon.ico",
             "topic": "香港经济日报: 香港"
@@ -48,7 +72,7 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "food",
-            "url": "https://rsshub.ktachibana.party/openrice/zh/hongkong/explore/chart/most-bookmarked",
+            "relative_path": "/openrice/zh/hongkong/explore/chart/most-bookmarked",
             "name": "OpenRice",
             "logo": "https://www.openrice.com/favicon.ico",
             "topic": "香港最多收藏餐廳排行榜"
@@ -56,7 +80,7 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "food",
-            "url": "https://rsshub.ktachibana.party/openrice/zh/hongkong/offers",
+            "relative_path": "/openrice/zh/hongkong/offers",
             "name": "OpenRice",
             "logo": "https://www.openrice.com/favicon.ico",
             "topic": "香港餐厅精选优惠"
@@ -64,7 +88,7 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "food",
-            "url": "https://rsshub.ktachibana.party/openrice/zh/hongkong/explore/chart/best-rating",
+            "relative_path": "/openrice/zh/hongkong/explore/chart/best-rating",
             "name": "OpenRice",
             "logo": "https://www.openrice.com/favicon.ico",
             "topic": "香港每周最高评分餐厅排行榜"
@@ -72,7 +96,7 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "food",
-            "url": "https://rsshub.ktachibana.party/openrice/zh/hongkong/promos",
+            "relative_path": "/openrice/zh/hongkong/promos",
             "name": "OpenRice",
             "logo": "https://www.openrice.com/favicon.ico",
             "topic": "香港餐厅热门活动"
@@ -84,7 +108,7 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "job",
-            "url": "https://rsshub.speednet.icu/linkedin/jobs/all/all/%20/geoId=103291313&f_TPR=r86400",
+            "relative_path": "/linkedin/jobs/all/all/%20/geoId=103291313&f_TPR=r86400",
             "name": "Linkedin",
             "logo": "https://www.linkedin.com/favicon.ico",
             "topic": "领英香港最新职位"
@@ -92,7 +116,7 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "job",
-            "url": "https://rsshub.ktachibana.party/v2ex/tab/jobs",
+            "relative_path": "/v2ex/tab/jobs",
             "name": "V2EX",
             "logo": "https://v2ex.com/favicon.ico",
             "topic": "V2EX工作板块最新话题"
@@ -100,7 +124,7 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "job",
-            "url": "https://rsshub.speednet.icu/eleduck/posts/5",
+            "relative_path": "/eleduck/posts/5",
             "name": "电鸭社区",
             "logo": "https://static.eleduck.com/_next/static/media/icon-500.d77f6cfc.png",
             "topic": "电鸭社区招聘&找人栏目最新话题"
@@ -112,7 +136,7 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "shopping",
-            "url": "https://rsshub.ktachibana.party/eprice/hk",
+            "relative_path": "/eprice/hk",
             "name": "ePrice.HK",
             "logo": "https://eprice.hk/favicon.ico",
             "topic": "ePrice最新消息"

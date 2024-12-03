@@ -2,25 +2,48 @@ import feedparser
 from typing import List, Optional
 from datetime import datetime
 import logging
+import random
 from app.models.content import Content, ContentType, Source, ListItem
-from app.core.rss_config import rss_settings, RSSFeed
+from app.core.rss_config import rss_settings, RSSFeed, FetchMode, RSSBaseUrl
 
 logger = logging.getLogger(__name__)
 
 class RSSService:
     def __init__(self):
         self.feeds = rss_settings.RSS_FEEDS
+        self.base_urls = rss_settings.BASE_URL_POOL
+        self.fetch_mode = rss_settings.FETCH_MODE
     
-    def parse_feed(self, feed_url: str) -> Optional[feedparser.FeedParserDict]:
-        """Parse RSS feed from given URL"""
+    def get_base_url(self) -> str:
+        """Get base URL based on fetch mode"""
+        enabled_urls = [url for url in self.base_urls if url.enabled]
+        if not enabled_urls:
+            raise ValueError("No enabled base URLs found")
+            
+        if self.fetch_mode == FetchMode.PRIORITY:
+            # Sort by priority (lower number = higher priority)
+            sorted_urls = sorted(enabled_urls, key=lambda x: x.priority)
+            return sorted_urls[0].url
+        else:  # Random mode
+            return random.choice(enabled_urls).url
+    
+    def get_full_url(self, feed: RSSFeed) -> str:
+        """Combine base URL with relative path"""
+        base_url = self.get_base_url()
+        return f"{base_url.rstrip('/')}/{feed.relative_path.lstrip('/')}"
+
+    def parse_feed(self, feed: RSSFeed) -> Optional[feedparser.FeedParserDict]:
+        """Parse RSS feed"""
         try:
-            feed = feedparser.parse(feed_url)
-            if feed.bozo:  # Check if there was any error during parsing
-                logger.error(f"Error parsing feed {feed_url}: {feed.bozo_exception}")
+            full_url = self.get_full_url(feed)
+            feed_data = feedparser.parse(full_url)
+            if feed_data.bozo:  # Check if there was any error during parsing
+                logger.error(f"Error parsing feed {full_url}: {feed_data.bozo_exception}")
                 return None
-            return feed
+            logger.info(f"Successfully parsed feed {feed.topic} from URL: {full_url}")
+            return feed_data
         except Exception as e:
-            logger.error(f"Failed to parse feed {feed_url}: {str(e)}")
+            logger.error(f"Failed to parse feed {feed.relative_path}: {str(e)}")
             return None
 
     def convert_to_content(self, feed_data: feedparser.FeedParserDict, feed: RSSFeed) -> Content:
@@ -31,18 +54,19 @@ class RSSService:
         #     json.dump(feed_data, f, ensure_ascii=False, indent=2)
 
         if not feed_data:
-            logger.warning(f"Failed to parse feed: {feed.url}")
+            logger.warning(f"Failed to parse feed: {feed.relative_path}")
             return None
 
         if not feed_data.get("entries"):
-            logger.warning(f"No entries found in feed: {feed.url}")
+            logger.warning(f"No entries found in feed: {feed.relative_path}")
             return None
     
         try:
             source = Source(
                 name=feed.name,
-                link=feed.url,
-                logo=feed.logo
+                link=feed_data.get("feed", {}).get("link", ""),
+                logo=feed.logo,
+                rss_path=feed.relative_path
             )
     
             content = Content(
@@ -89,7 +113,7 @@ class RSSService:
                     continue
     
             if not content.data:
-                logger.warning(f"No valid entries found in feed: {feed.url}")
+                logger.warning(f"No valid entries found in feed: {feed.relative_path}")
                 return None
     
             return content
@@ -101,7 +125,7 @@ class RSSService:
     async def fetch_content(self, feed: RSSFeed) -> Content:
         """Fetch and parse feed for a given source"""
         contents = []
-        feed_data = self.parse_feed(feed.url)
+        feed_data = self.parse_feed(feed)
         if feed_data:
             content = self.convert_to_content(feed_data, feed)
             if content:
