@@ -84,6 +84,14 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "job",
+            "url": "https://rsshub.speednet.icu/linkedin/jobs/all/all/%20/geoId=103291313&f_TPR=r86400",
+            "name": "Linkedin",
+            "logo": "https://www.linkedin.com/favicon.ico",
+            "topic": "领英香港最新职位"
+        },
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "job",
             "url": "https://rsshub.ktachibana.party/v2ex/tab/jobs",
             "name": "V2EX",
             "logo": "https://v2ex.com/favicon.ico",
