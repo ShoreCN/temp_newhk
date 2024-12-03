@@ -39,6 +39,7 @@ class RSSConfig(BaseSettings):
         ############################################
         #               新闻类(news)RSS             #
         ############################################
+        # HK01系列
         {
             "content_type": ContentType.INFORMATION,
             "category": "news",
@@ -63,6 +64,14 @@ class RSSConfig(BaseSettings):
             "name": "香港经济日报",
             "logo": "https://www.hket.com/favicon.ico",
             "topic": "香港经济日报: 香港"
+        },
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "news",
+            "relative_path": "/i-cable/news",
+            "name": "有线新闻",
+            "logo": "https://www.i-cable.com/wp-content/themes/cascara/assets/images/new_logo.svg",
+            "topic": "有线宽频: 新闻资讯"
         },
 
         ############################################

@@ -3,6 +3,7 @@ from typing import List, Optional
 from datetime import datetime
 import logging
 import random
+import asyncio
 from app.models.content import Content, ContentType, Source, ListItem
 from app.core.rss_config import rss_settings, RSSFeed, FetchMode, RSSBaseUrl
 
