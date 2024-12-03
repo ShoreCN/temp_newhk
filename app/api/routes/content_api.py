@@ -67,7 +67,7 @@ async def list_contents(
         collection = db.db[content_type]
         query = {"content_type": content_type}
         if category:
-            query["category.name"] = category
+            query["category"] = category
         if is_hot is not None:
             query["is_hot"] = is_hot
             
