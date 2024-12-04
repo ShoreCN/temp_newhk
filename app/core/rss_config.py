@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 from enum import Enum
 from pydantic_settings import BaseSettings
 from app.models.content import ContentType
@@ -15,7 +15,8 @@ class RSSBaseUrl(BaseSettings):
 class RSSFeed(BaseSettings):
     content_type: ContentType
     category: str
-    relative_path: str
+    url: Optional[str] = None    # url有值说明有专门的RSS来源, 则忽略relative_path
+    relative_path: Optional[str] = None  # 相对路径, url字段无值时使用
     name: str
     logo: str
     topic: str
@@ -72,6 +73,15 @@ class RSSConfig(BaseSettings):
             "name": "有线新闻",
             "logo": "https://www.i-cable.com/wp-content/themes/cascara/assets/images/new_logo.svg",
             "topic": "有线宽频: 新闻资讯"
+        },
+        # South China Morning Post
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "news",
+            "url": "https://www.scmp.com/rss/2/feed",
+            "name": "South China Morning Post",
+            "logo": "https://www.scmp.com/favicon.ico",
+            "topic": "South China Morning Post: Hong Kong"
         },
 
         ############################################

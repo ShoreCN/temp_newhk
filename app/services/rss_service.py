@@ -30,6 +30,11 @@ class RSSService:
     
     def get_full_url(self, feed: RSSFeed) -> str:
         """Combine base URL with relative path"""
+        # If feed has a custom URL, use it
+        if feed.url:
+            return feed.url
+        
+        # Otherwise, combine base URL and relative path
         base_url = self.get_base_url()
         return f"{base_url.rstrip('/')}/{feed.relative_path.lstrip('/')}"
 
