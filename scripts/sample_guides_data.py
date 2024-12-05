@@ -152,7 +152,7 @@ sample_guides_data = [
         "content_type": ContentType.GUIDES,
         "category": "job",
         "topic": "香港IT行业薪资报告",
-        "sub_topic": "最高 *HKD 100,000*",
+        "sub_topic": "最高 *$80,000*",
         "tags": ["薪资", "行业", "IT"],
         "source_list": [
             {
@@ -170,15 +170,15 @@ sample_guides_data = [
                 },
                 {
                     "name": "高级开发工程师",
-                    "metrics": {"salary_range": "HKD 35,000-60,000"}
+                    "metrics": {"salary_range": "HKD 25,000-50,000"}
                 },
                 {
                     "name": "架构师",
-                    "metrics": {"salary_range": "HKD 60,000-100,000"}
+                    "metrics": {"salary_range": "HKD 50,000-80,000"}
                 },
                 {
                     "name": "项目经理",
-                    "metrics": {"salary_range": "HKD 50,000-80,000"}
+                    "metrics": {"salary_range": "HKD 40,000-80,000"}
                 }
             ]
         },

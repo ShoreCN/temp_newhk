@@ -47,7 +47,8 @@ class RSSConfig(BaseSettings):
             "relative_path": "/hk01/latest",
             "name": "HK 01",
             "logo": "https://hk01.com/favicon.ico",
-            "topic": "香港01最新新闻"
+            # "topic": "香港01最新新闻"
+            "topic": "香港即时最新新闻"
         },
         {
             "content_type": ContentType.INFORMATION,
@@ -81,7 +82,8 @@ class RSSConfig(BaseSettings):
             "url": "https://www.scmp.com/rss/2/feed",
             "name": "South China Morning Post",
             "logo": "https://www.scmp.com/favicon.ico",
-            "topic": "South China Morning Post: Hong Kong"
+            # "topic": "South China Morning Post: Hong Kong"
+            "topic": "Morning Post: Hong Kong"
         },
         # Yahoo News
         {
@@ -103,7 +105,8 @@ class RSSConfig(BaseSettings):
             "relative_path": "/openrice/zh/hongkong/explore/chart/most-bookmarked",
             "name": "OpenRice",
             "logo": "https://www.openrice.com/favicon.ico",
-            "topic": "香港最多收藏餐廳排行榜"
+            # "topic": "香港最多收藏餐廳排行榜"
+            "topic": "香港餐厅收藏榜"
         },
         {
             "content_type": ContentType.INFORMATION,
@@ -119,7 +122,8 @@ class RSSConfig(BaseSettings):
             "relative_path": "/openrice/zh/hongkong/explore/chart/best-rating",
             "name": "OpenRice",
             "logo": "https://www.openrice.com/favicon.ico",
-            "topic": "香港每周最高评分餐厅排行榜"
+            # "topic": "香港每周最高评分餐厅排行榜"
+            "topic": "每周香港餐厅评分榜"
         },
         {
             "content_type": ContentType.INFORMATION,
@@ -135,7 +139,8 @@ class RSSConfig(BaseSettings):
             "relative_path": "/esquirehk/tag/Food%20&%20Drinks",
             "name": "EsquireHK",
             "logo": "https://www.esquirehk.com/favicon/favicon.ico",
-            "topic": "EsquireHK美食推荐"
+            # "topic": "EsquireHK美食推荐"
+            "topic": "本地香港美食推荐"
         },
 
         ############################################
@@ -155,7 +160,8 @@ class RSSConfig(BaseSettings):
             "relative_path": "/v2ex/tab/jobs",
             "name": "V2EX",
             "logo": "https://v2ex.com/favicon.ico",
-            "topic": "V2EX工作板块最新话题"
+            # "topic": "V2EX工作板块最新话题"
+            "topic": "职场最新话题"
         },
         {
             "content_type": ContentType.INFORMATION,
@@ -163,7 +169,8 @@ class RSSConfig(BaseSettings):
             "relative_path": "/eleduck/posts/5",
             "name": "电鸭社区",
             "logo": "https://static.eleduck.com/_next/static/media/icon-500.d77f6cfc.png",
-            "topic": "电鸭社区招聘&找人栏目最新话题"
+            # "topic": "电鸭社区招聘&找人栏目最新话题"
+            "topic": "网络社区招聘话题"
         },
 
         ############################################
@@ -175,7 +182,8 @@ class RSSConfig(BaseSettings):
             "relative_path": "/eprice/hk",
             "name": "ePrice.HK",
             "logo": "https://eprice.hk/favicon.ico",
-            "topic": "ePrice最新消息"
+            # "topic": "ePrice最新消息",
+            "topic": "港区电子产品最新消息"
         },
         {
             "content_type": ContentType.INFORMATION,
@@ -183,7 +191,8 @@ class RSSConfig(BaseSettings):
             "relative_path": "/esquirehk/tag/Fashion",
             "name": "EsquireHK",
             "logo": "https://www.esquirehk.com/favicon/favicon.ico",
-            "topic": "EsquireHK潮流资讯"
+            # "topic": "EsquireHK潮流资讯",
+            "topic": "港人潮流资讯"
         },
         {
             "content_type": ContentType.INFORMATION,
@@ -191,7 +200,8 @@ class RSSConfig(BaseSettings):
             "relative_path": "/youtube/user/%40pricehongkongofficial",
             "name": "YouTube",
             "logo": "https://www.youtube.com/s/desktop/ceaca137/img/logos/favicon_48x48.png",
-            "topic": "Price.com.hk 香港格價網 - YouTube"
+            # "topic": "Price.com.hk 香港格價網 - YouTube",
+            "topic": "港区电子产品价格对比"
         },
 
         ############################################
@@ -203,7 +213,8 @@ class RSSConfig(BaseSettings):
             "relative_path": "/esquirehk/tag/travel",
             "name": "EsquireHK",
             "logo": "https://www.esquirehk.com/favicon/favicon.ico",
-            "topic": "EsquireHK游玩资讯"
+            # "topic": "EsquireHK游玩资讯"
+            "topic": "HK游玩资讯"
         },
         {
             "content_type": ContentType.INFORMATION,
@@ -219,7 +230,8 @@ class RSSConfig(BaseSettings):
             "relative_path": "/flyert/creditcard/intcreditcard",
             "name": "飞客茶馆",
             "logo": "https://www.flyert.com/favicon.ico",
-            "topic": "飞客茶馆海外用卡最新话题"
+            # "topic": "飞客茶馆海外用卡最新话题"
+            "topic": "海外用卡最新话题"
         },
 
         ############################################
