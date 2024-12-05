@@ -83,6 +83,15 @@ class RSSConfig(BaseSettings):
             "logo": "https://www.scmp.com/favicon.ico",
             "topic": "South China Morning Post: Hong Kong"
         },
+        # Yahoo News
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "news",
+            "relative_path": "/yahoo/news/hk",
+            "name": "Yahoo News",
+            "logo": "https://www.yahoo.com/favicon.ico",
+            "topic": "雅虎香港最新新闻"
+        },
 
         ############################################
         #               美食类(food)RSS             #
