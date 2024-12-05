@@ -21,7 +21,7 @@ async def information_page(request: Request):
     cursor = db.information.find(
         {},
     ).sort("created_at", -1)
-    information_list = await cursor.to_list(length=20)
+    information_list = await cursor.to_list(length=30)
     # 转换所有文档的_id为id
     for content in information_list:
         content["id"] = str(content.pop("_id"))
