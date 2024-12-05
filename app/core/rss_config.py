@@ -205,6 +205,22 @@ class RSSConfig(BaseSettings):
             "logo": "https://www.esquirehk.com/favicon/favicon.ico",
             "topic": "EsquireHK游玩资讯"
         },
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "event",
+            "relative_path": "/flyert/preferential",
+            "name": "飞客茶馆",
+            "logo": "https://www.flyert.com/favicon.ico",
+            "topic": "飞客茶馆最新优惠"
+        },
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "event",
+            "relative_path": "/flyert/creditcard/intcreditcard",
+            "name": "飞客茶馆",
+            "logo": "https://www.flyert.com/favicon.ico",
+            "topic": "飞客茶馆海外用卡最新话题"
+        },
 
         ############################################
         #               日常类(daily)RSS            #
