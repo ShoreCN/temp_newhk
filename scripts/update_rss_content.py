@@ -37,9 +37,9 @@ async def update_rss_content():
                     # Convert content to dict
                     content_dict = content.dict(exclude={'id'})
 
-                    # Use topic as unique identifier to avoid duplicates
+                    # Use original_data_path as unique identifier to avoid duplicates
                     result = await db.information.update_one(
-                        {'topic': content.topic},
+                        {'original_data_path': content.original_data_path},
                         {'$set': content_dict},
                         upsert=True
                     )

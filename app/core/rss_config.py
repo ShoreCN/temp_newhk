@@ -15,8 +15,8 @@ class RSSBaseUrl(BaseSettings):
 class RSSFeed(BaseSettings):
     content_type: ContentType
     category: str
-    url: Optional[str] = None    # url有值说明有专门的RSS来源, 则忽略relative_path
-    relative_path: Optional[str] = None  # 相对路径, url字段无值时使用
+    full_path: Optional[str] = None    # full_path有值说明有专门的RSS来源, 则忽略relative_path
+    relative_path: Optional[str] = None  # 相对路径, full_path字段无值时使用
     name: str
     logo: str
     topic: str
@@ -79,7 +79,7 @@ class RSSConfig(BaseSettings):
         {
             "content_type": ContentType.INFORMATION,
             "category": "news",
-            "url": "https://www.scmp.com/rss/2/feed",
+            "full_path": "https://www.scmp.com/rss/2/feed",
             "name": "South China Morning Post",
             "logo": "https://www.scmp.com/favicon.ico",
             # "topic": "South China Morning Post: Hong Kong"

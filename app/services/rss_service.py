@@ -31,8 +31,8 @@ class RSSService:
     def get_full_url(self, feed: RSSFeed) -> str:
         """Combine base URL with relative path"""
         # If feed has a custom URL, use it
-        if feed.url:
-            return feed.url
+        if feed.full_path:
+            return feed.full_path
         
         # Otherwise, combine base URL and relative path
         base_url = self.get_base_url()
@@ -72,7 +72,7 @@ class RSSService:
                 name=feed.name,
                 link=feed_data.get("feed", {}).get("link", ""),
                 logo=feed.logo,
-                rss_path=feed.relative_path
+                rss_path=feed.full_path if feed.full_path else feed.relative_path
             )
     
             content = Content(
@@ -80,6 +80,7 @@ class RSSService:
                 category=feed.category,
                 topic=feed.topic,
                 sub_topic=feed_data.get("feed", {}).get("title", ""),  # 使用数据源的标题作为子主题
+                original_data_path=feed.full_path if feed.full_path else feed.relative_path,
                 source_list=[source],
                 data=[]  # Initialize the data list
             )
@@ -149,6 +150,9 @@ class RSSService:
 
             # 打印任务完成信息
             logger.info(f"Finished fetching content for {feed.topic}")
+
+            # 测试时, 可以放开这一行，拉取一条进行验证
+            # break
             
             # 拉取完每条任务后等待5秒
             await asyncio.sleep(5)

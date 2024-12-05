@@ -15,6 +15,7 @@ sample_guides_data = [
         "topic": "香港银行定存利率",
         "sub_topic": "至高 *4.5%*",
         "tags": ["金额", "时间", "币种"],
+        "original_data_path": "http://mock/bank_time_deposit_rate",
         "source_list": [
             {
                 "name": "HSBC",
@@ -154,6 +155,7 @@ sample_guides_data = [
         "topic": "香港IT行业薪资报告",
         "sub_topic": "最高 *$80,000*",
         "tags": ["薪资", "行业", "IT"],
+        "original_data_path": "http://mock/jobs_report",
         "source_list": [
             {
                 "name": "LinkedIn",
@@ -192,6 +194,7 @@ sample_guides_data = [
         "topic": "香港租房攻略",
         "sub_topic": "最低 *$5,000*",
         "tags": ["租房", "生活", "香港"],
+        "original_data_path": "http://mock/hkrent",
         "source_list": [
             {
                 "name": "香港租房网",

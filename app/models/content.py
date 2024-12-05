@@ -45,6 +45,7 @@ class Content(BaseModel):
     category: str = Field(description="对应产品设计里的领域")
     topic: str = Field(description="主题")
     sub_topic: Optional[str] = None
+    original_data_path: Optional[str] = None # 原始数据采集源的地址, 对外不可见, 作为内部MongoDB的唯一标识
     tags: Optional[List[str]] = None
     source_list: Optional[List[Source]] = None
     data: Union[List[ListItem], GuideData, None]

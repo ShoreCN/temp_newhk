@@ -15,11 +15,12 @@ sample_data_information = [
         "category": "daily",
         "topic": "港区app下载榜单📱(Mock)",
         "tags": ["购物", "必备", "游戏", "生活", "旅游"],
+        "original_data_path": "http://mock/appstore",
         "source_list": [
             {
                 "name": "App Store",
                 "link": "https://apps.apple.com",
-                "logo": "https://www.apple.com/favicon.ico"
+                "logo": "https://www.apple.com/favicon.ico",
             }
         ],
         "data": [
@@ -77,11 +78,12 @@ sample_data_information = [
         "topic": "本周美食排行榜(Mock)",
         "sub_topic": "香港美食",
         "tags": ["美食", "香港", "必吃"],
+        "original_data_path": "http://mock/openrice",
         "source_list": [
             {
                 "name": "OpenRice",
                 "link": "https://www.openrice.com",
-                "logo": "https://www.openrice.com/favicon.ico"
+                "logo": "https://www.openrice.com/favicon.ico",
             }
         ],
         "data": [
@@ -143,6 +145,7 @@ sample_data_information = [
         "category": "shopping",
         "topic": "每周电子产品热销排行榜(Mock)",
         "tags": ["电子", "购物", "手机"],
+        "original_data_path": "http://mock/hot_electronics",
         "source_list": [
             {
                 "name": "Price.com.hk",
@@ -214,11 +217,12 @@ sample_data_information = [
         "category": "food",
         "topic": "11月香港美食餐厅推介(Mock)",
         "tags": ["美食", "香港", "餐厅"],
+        "original_data_path": "http://mock/timeout",
         "source_list": [
             {
                 "name": "TimeOut",
                 "link": "https://www.timeout.com.hk",
-                "logo": "https://www.timeout.com.hk/favicon.ico"
+                "logo": "https://www.timeout.com.hk/favicon.ico",
             }
         ],
         "data": [
@@ -257,10 +261,12 @@ sample_data_information = [
         "category": "news",
         "topic": "今日热门新闻📰(Mock)",
         "tags": ["新闻", "资讯", "香港"],
+        "original_data_path": "http://mock/hk01/hot",
         "source_list": [
             {
                 "name": "HK01",
                 "link": "https://www.hk01.com",
+                "logo": "https://www.hk01.com/favicon.ico"
             }
         ],
         "data": [
