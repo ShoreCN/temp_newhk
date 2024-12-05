@@ -198,8 +198,16 @@ class RSSConfig(BaseSettings):
         },
 
         ############################################
-        #               生活类(life)RSS             #
+        #               日常类(daily)RSS            #
         ############################################
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "daily",
+            "relative_path": "/appstore/xianmian",
+            "name": "App Store",
+            "logo": "https://apps.apple.com/favicon.ico",
+            "topic": "每日精品限免 / 促销应用"
+        }
         
     ]
     RSS_UPDATE_INTERVAL: int = 3600  # 默认每小时更新一次
