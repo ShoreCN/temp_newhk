@@ -94,6 +94,15 @@ class RSSConfig(BaseSettings):
             "logo": "https://www.yahoo.com/favicon.ico",
             "topic": "雅虎香港最新新闻"
         },
+        # unwire.hk
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "news",
+            "full_path": "https://feeds.feedburner.com/unwirelife/",
+            "name": "Unwire.HK",
+            "logo": "https://www.unwire.hk/favicon.ico",
+            "topic": "最新生活科技资讯"
+        },
 
         ############################################
         #               美食类(food)RSS             #
