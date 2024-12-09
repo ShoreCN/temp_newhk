@@ -1,5 +1,6 @@
 import sys
 import os
+import argparse
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import asyncio
@@ -13,7 +14,7 @@ from app.core.rss_config import rss_settings
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-async def update_rss_content():
+async def update_rss_content(rss_path: str = None):
     try:
         # Initialize MongoDB client
         client = AsyncIOMotorClient(settings.MONGODB_URL)
@@ -22,6 +23,17 @@ async def update_rss_content():
         # Initialize RSS service
         rss_service = RSSService()
         
+        # Filter RSS feeds if rss_path is provided
+        if rss_path:
+            rss_service.feeds = [
+                feed for feed in rss_service.feeds 
+                if (feed.relative_path and rss_path in feed.relative_path) or 
+                   (feed.full_path and rss_path in feed.full_path)
+            ]
+            if not rss_service.feeds:
+                logger.warning(f"No RSS feeds found matching path: {rss_path}")
+                return
+            
         while True:
             try:
                 # Fetch all content
@@ -66,4 +78,8 @@ async def update_rss_content():
         client.close()
 
 if __name__ == "__main__":
-    asyncio.run(update_rss_content())
+    parser = argparse.ArgumentParser(description='Update RSS content with optional path filtering')
+    parser.add_argument('--rss_path', type=str, help='Filter RSS feeds by matching relative_path or full_path')
+    args = parser.parse_args()
+    
+    asyncio.run(update_rss_content(args.rss_path))
