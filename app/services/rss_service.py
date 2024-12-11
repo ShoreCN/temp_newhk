@@ -110,7 +110,7 @@ class RSSService:
                         name=entry["title"],
                         link=entry["link"],
                         metrics={
-                            # "description": entry.get("description", ""),
+                            "description": entry.get("description", ""),
                             "pub_date": int(pub_date.timestamp()) if pub_date else None,
                         }
                     ))
