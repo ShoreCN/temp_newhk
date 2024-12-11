@@ -71,7 +71,7 @@ async def list_contents(
         if is_hot is not None:
             query["is_hot"] = is_hot
             
-        projection = {"data": 0} if brief else None
+        projection = {"data.metrics.description": 0} if brief else None
 
         total = await collection.count_documents(query)
         cursor = collection.find(query, projection).skip(skip).limit(limit)
