@@ -186,7 +186,195 @@ sample_guides_data = [
         },
         "is_hot": True,
     },
-    
+
+    # 热门指南类内容3
+    {
+        "content_type": ContentType.GUIDES,
+        "category": "communication",
+        "topic": "无合约卡月租大比拼",
+        "sub_topic": "最低 *$33*",
+        "tags": ["通信", "月租", "套餐", "无合约"],
+        "original_data_path": "http://mock/contract_free",
+        "source_list": [
+            {
+                "name": "香港电讯",
+                "link": "https://www.hkt.com/",
+                "logo": "https://www.hkt.com/assets/HKTCorpsite/img/logo-site-header-tc.png"
+            },
+            {
+                "name": "中国移动",
+                "link": "https://www.hk.chinamobile.com",
+                "logo": "https://www.hk.chinamobile.com/favicon.ico"
+            },
+            {
+                "name": "3HK",
+                "link": "https://www.three.com.hk/",
+                "logo": "https://www.three.com.hk/favicon.ico"
+            },
+            {
+                "name": "数码通",
+                "link": "https://www.smartone.com/",
+                "logo": "https://www.smartone.com/favicon.ico"
+            }
+        ],
+        "data": {
+            "description": "无合约卡月租大比拼",
+            "instructions": "",
+            "data_table": [
+                {
+                    "name": "中国移动",
+                    "metrics": {
+                        "contract_list": [
+                            {"period": "12 months", "data package": "1GB", "speed": "4G", "price": 33},
+                            {"period": "12 months", "data package": "1GB", "speed": "4.5G", "price": 43},
+                            {"period": "12 months", "data package": "1GB", "speed": "5G", "price": 53},
+                            {"period": "12 months", "data package": "5GB", "speed": "4G", "price": 43},
+                            {"period": "12 months", "data package": "5GB", "speed": "4.5G", "price": 53},
+                            {"period": "12 months", "data package": "5GB", "speed": "5G", "price": 63},
+                            {"period": "12 months", "data package": "10GB", "speed": "4G", "price": 53},
+                            {"period": "12 months", "data package": "10GB", "speed": "4.5G", "price": 63},
+                            {"period": "12 months", "data package": "10GB", "speed": "5G", "price": 73},
+                            {"period": "12 months", "data package": "20GB", "speed": "4G", "price": 63},
+                            {"period": "12 months", "data package": "20GB", "speed": "4.5G", "price": 73},
+                            {"period": "12 months", "data package": "20GB", "speed": "5G", "price": 83},
+                            {"period": "12 months", "data package": "50GB", "speed": "4G", "price": 109},
+                            {"period": "12 months", "data package": "50GB", "speed": "4.5G", "price": 119},
+                            {"period": "12 months", "data package": "50GB", "speed": "5G", "price": 129},
+                            {"period": "24 months", "data package": "1GB", "speed": "4G", "price": 43},
+                            {"period": "24 months", "data package": "1GB", "speed": "4.5G", "price": 53},
+                            {"period": "24 months", "data package": "1GB", "speed": "5G", "price": 63},
+                            {"period": "24 months", "data package": "5GB", "speed": "4G", "price": 53},
+                            {"period": "24 months", "data package": "5GB", "speed": "4.5G", "price": 63},
+                            {"period": "24 months", "data package": "5GB", "speed": "5G", "price": 73},
+                            {"period": "24 months", "data package": "10GB", "speed": "4G", "price": 63},
+                            {"period": "24 months", "data package": "10GB", "speed": "4.5G", "price": 73},
+                            {"period": "24 months", "data package": "10GB", "speed": "5G", "price": 83},
+                            {"period": "24 months", "data package": "20GB", "speed": "4G", "price": 73},
+                            {"period": "24 months", "data package": "20GB", "speed": "4.5G", "price": 83},
+                            {"period": "24 months", "data package": "20GB", "speed": "5G", "price": 93},
+                            {"period": "24 months", "data package": "50GB", "speed": "4G", "price": 119},
+                            {"period": "24 months", "data package": "50GB", "speed": "4.5G", "price": 129},
+                            {"period": "24 months", "data package": "50GB", "speed": "5G", "price": 139},
+                        ]
+                    },
+                },
+                {
+                    "name": "3HK",
+                    "metrics": {
+                        "contract_list": [
+                            {"period": "12 months", "data package": "1GB", "speed": "4G", "price": 33},
+                            {"period": "12 months", "data package": "1GB", "speed": "4.5G", "price": 43},
+                            {"period": "12 months", "data package": "1GB", "speed": "5G", "price": 53},
+                            {"period": "12 months", "data package": "5GB", "speed": "4G", "price": 43},
+                            {"period": "12 months", "data package": "5GB", "speed": "4.5G", "price": 53},
+                            {"period": "12 months", "data package": "5GB", "speed": "5G", "price": 63},
+                            {"period": "12 months", "data package": "10GB", "speed": "4G", "price": 53},
+                            {"period": "12 months", "data package": "10GB", "speed": "4.5G", "price": 63},
+                            {"period": "12 months", "data package": "10GB", "speed": "5G", "price": 73},
+                            {"period": "12 months", "data package": "20GB", "speed": "4G", "price": 63},
+                            {"period": "12 months", "data package": "20GB", "speed": "4.5G", "price": 73},
+                            {"period": "12 months", "data package": "20GB", "speed": "5G", "price": 83},
+                            {"period": "12 months", "data package": "50GB", "speed": "4G", "price": 109},
+                            {"period": "12 months", "data package": "50GB", "speed": "4.5G", "price": 119},
+                            {"period": "12 months", "data package": "50GB", "speed": "5G", "price": 129},
+                            {"period": "24 months", "data package": "1GB", "speed": "4G", "price": 43},
+                            {"period": "24 months", "data package": "1GB", "speed": "4.5G", "price": 53},
+                            {"period": "24 months", "data package": "1GB", "speed": "5G", "price": 63},
+                            {"period": "24 months", "data package": "5GB", "speed": "4G", "price": 53},
+                            {"period": "24 months", "data package": "5GB", "speed": "4.5G", "price": 63},
+                            {"period": "24 months", "data package": "5GB", "speed": "5G", "price": 73},
+                            {"period": "24 months", "data package": "10GB", "speed": "4G", "price": 63},
+                            {"period": "24 months", "data package": "10GB", "speed": "4.5G", "price": 73},
+                            {"period": "24 months", "data package": "10GB", "speed": "5G", "price": 83},
+                            {"period": "24 months", "data package": "20GB", "speed": "4G", "price": 73},
+                            {"period": "24 months", "data package": "20GB", "speed": "4.5G", "price": 83},
+                            {"period": "24 months", "data package": "20GB", "speed": "5G", "price": 93},
+                            {"period": "24 months", "data package": "50GB", "speed": "4G", "price": 119},
+                            {"period": "24 months", "data package": "50GB", "speed": "4.5G", "price": 129},
+                            {"period": "24 months", "data package": "50GB", "speed": "5G", "price": 139},
+                        ]
+                    },
+                },
+                {
+                    "name": "数码通",
+                    "metrics": {
+                        "contract_list": [
+                            {"period": "12 months", "data package": "1GB", "speed": "4G", "price": 33},
+                            {"period": "12 months", "data package": "1GB", "speed": "4.5G", "price": 43},
+                            {"period": "12 months", "data package": "1GB", "speed": "5G", "price": 53},
+                            {"period": "12 months", "data package": "5GB", "speed": "4G", "price": 43},
+                            {"period": "12 months", "data package": "5GB", "speed": "4.5G", "price": 53},
+                            {"period": "12 months", "data package": "5GB", "speed": "5G", "price": 63}, 
+                            {"period": "12 months", "data package": "10GB", "speed": "4G", "price": 53},
+                            {"period": "12 months", "data package": "10GB", "speed": "4.5G", "price": 63},
+                            {"period": "12 months", "data package": "10GB", "speed": "5G", "price": 73},
+                            {"period": "12 months", "data package": "20GB", "speed": "4G", "price": 63},
+                            {"period": "12 months", "data package": "20GB", "speed": "4.5G", "price": 73},
+                            {"period": "12 months", "data package": "20GB", "speed": "5G", "price": 83},
+                            {"period": "12 months", "data package": "50GB", "speed": "4G", "price": 109},
+                            {"period": "12 months", "data package": "50GB", "speed": "4.5G", "price": 119}, 
+                            {"period": "12 months", "data package": "50GB", "speed": "5G", "price": 129},
+                            {"period": "24 months", "data package": "1GB", "speed": "4G", "price": 43},
+                            {"period": "24 months", "data package": "1GB", "speed": "4.5G", "price": 53},
+                            {"period": "24 months", "data package": "1GB", "speed": "5G", "price": 63},
+                            {"period": "24 months", "data package": "5GB", "speed": "4G", "price": 53},
+                            {"period": "24 months", "data package": "5GB", "speed": "4.5G", "price": 63},
+                            {"period": "24 months", "data package": "5GB", "speed": "5G", "price": 73},
+                            {"period": "24 months", "data package": "10GB", "speed": "4G", "price": 63},    
+                            {"period": "24 months", "data package": "10GB", "speed": "4.5G", "price": 73},
+                            {"period": "24 months", "data package": "10GB", "speed": "5G", "price": 83},
+                            {"period": "24 months", "data package": "20GB", "speed": "4G", "price": 73},
+                            {"period": "24 months", "data package": "20GB", "speed": "4.5G", "price": 83},
+                            {"period": "24 months", "data package": "20GB", "speed": "5G", "price": 93},
+                            {"period": "24 months", "data package": "50GB", "speed": "4G", "price": 119},
+                            {"period": "24 months", "data package": "50GB", "speed": "4.5G", "price": 129},
+                            {"period": "24 months", "data package": "50GB", "speed": "5G", "price": 139},
+                        ]
+                    }
+                },
+                {
+                    "name": "香港电讯",
+                    "metrics": {
+                        "contract_list": [
+                            {"period": "12 months", "data package": "1GB", "speed": "4G", "price": 33},
+                            {"period": "12 months", "data package": "1GB", "speed": "4.5G", "price": 43},
+                            {"period": "12 months", "data package": "1GB", "speed": "5G", "price": 53},
+                            {"period": "12 months", "data package": "5GB", "speed": "4G", "price": 43},
+                            {"period": "12 months", "data package": "5GB", "speed": "4.5G", "price": 53},
+                            {"period": "12 months", "data package": "5GB", "speed": "5G", "price": 63},
+                            {"period": "12 months", "data package": "10GB", "speed": "4G", "price": 53},
+                            {"period": "12 months", "data package": "10GB", "speed": "4.5G", "price": 63},
+                            {"period": "12 months", "data package": "10GB", "speed": "5G", "price": 73},
+                            {"period": "12 months", "data package": "20GB", "speed": "4G", "price": 63},
+                            {"period": "12 months", "data package": "20GB", "speed": "4.5G", "price": 73},
+                            {"period": "12 months", "data package": "20GB", "speed": "5G", "price": 83},
+                            {"period": "12 months", "data package": "50GB", "speed": "4G", "price": 109},
+                            {"period": "12 months", "data package": "50GB", "speed": "4.5G", "price": 119},
+                            {"period": "12 months", "data package": "50GB", "speed": "5G", "price": 129},
+                            {"period": "24 months", "data package": "1GB", "speed": "4G", "price": 43},
+                            {"period": "24 months", "data package": "1GB", "speed": "4.5G", "price": 53},
+                            {"period": "24 months", "data package": "1GB", "speed": "5G", "price": 63},
+                            {"period": "24 months", "data package": "5GB", "speed": "4G", "price": 53},
+                            {"period": "24 months", "data package": "5GB", "speed": "4.5G", "price": 63},
+                            {"period": "24 months", "data package": "5GB", "speed": "5G", "price": 73},
+                            {"period": "24 months", "data package": "10GB", "speed": "4G", "price": 63},
+                            {"period": "24 months", "data package": "10GB", "speed": "4.5G", "price": 73},
+                            {"period": "24 months", "data package": "10GB", "speed": "5G", "price": 83},
+                            {"period": "24 months", "data package": "20GB", "speed": "4G", "price": 73},
+                            {"period": "24 months", "data package": "20GB", "speed": "4.5G", "price": 83},
+                            {"period": "24 months", "data package": "20GB", "speed": "5G", "price": 93},
+                            {"period": "24 months", "data package": "50GB", "speed": "4G", "price": 119},
+                            {"period": "24 months", "data package": "50GB", "speed": "4.5G", "price": 129},
+                            {"period": "24 months", "data package": "50GB", "speed": "5G", "price": 139},
+                        ]
+                    }
+                }
+            ]
+        },
+        "is_hot": True,
+    },
+
+
     # 普通指南类内容
     {
         "content_type": ContentType.GUIDES,
@@ -220,7 +408,7 @@ sample_guides_data = [
                 }
             ]
         },
-        "is_hot": False,
+        "is_hot": True,
     }
 ]
 
