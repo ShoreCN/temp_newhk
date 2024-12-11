@@ -1,5 +1,6 @@
 import sys
 import os
+import argparse
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.models.content import ContentType, Content
@@ -304,22 +305,32 @@ sample_data_information = [
 
 ]
 
-async def insert_sample_information_data():
+async def insert_sample_information_data(clear_mode=None):
     client = AsyncIOMotorClient(settings.MONGODB_URL)
     db = client[settings.DATABASE_NAME]
-    # 清空现有数据
-    r = await db.information.delete_many({})
-    print(f"已清空现有资讯类内容数据，共删除 {r.deleted_count} 条数据")
-
-    # 将sample_data_information转换为Content对象
-    content_list = []
-    for data in sample_data_information:
-        content = Content(**data)
-        content_list.append(content.model_dump())
-
-    # 插入示例数据
-    await db.information.insert_many(content_list)
-    print(f"已插入 {len(content_list)} 条资讯类内容数据")
+    
+    # Clear data based on mode
+    if clear_mode == 'all':
+        result = await db.information.delete_many({})
+        print(f"已清空所有资讯类内容数据，共删除 {result.deleted_count} 条数据")
+    elif clear_mode == 'sample':
+        sample_orginal_data_pathes = [item['original_data_path'] for item in sample_data_information]
+        result = await db.information.delete_many({"original_data_path": {"$in": sample_orginal_data_pathes}})
+        print(f"已清空示例资讯类内容数据，共删除 {result.deleted_count} 条数据")
+    
+    if not clear_mode:
+        # Insert sample data only if no clear mode specified
+        for item in sample_data_information:
+            content = Content(**item)
+            await db.information.insert_one(content.model_dump())
+            
+        print(f"已插入 {len(sample_data_information)} 条资讯类内容数据")
+    
+    client.close()
 
 if __name__ == "__main__":
-    asyncio.run(insert_sample_information_data()) 
+    parser = argparse.ArgumentParser(description='Insert or clear sample information data')
+    parser.add_argument('--clear', choices=['sample', 'all'], help='Clear mode: "sample" to clear only sample data, "all" to clear all data')
+    args = parser.parse_args()
+    
+    asyncio.run(insert_sample_information_data(clear_mode=args.clear))
