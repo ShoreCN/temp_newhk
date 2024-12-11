@@ -298,6 +298,21 @@
             font-size: 12px;
             color: #666;
         }
+        
+        .information-title-section {
+            flex: 1;
+        }
+        
+        .hot-icon {
+            cursor: pointer;
+            margin-left: 8px;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+        
+        .hot-icon.active {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -323,7 +338,14 @@
             <div class="information-header">
                 <div class="information-title-section">
                     <span style="display:none;">Debug ID: {{ information.id }}</span>
-                    <h3 class="information-title">{{ information.topic }}</h3>
+                    <div style="display: flex; align-items: center;">
+                        <h3 class="information-title">{{ information.topic }}</h3>
+                        <span class="hot-icon {% if information.is_hot %}active{% endif %}" 
+                              onclick="toggleHotStatus('{{ information.id }}', '{{ information.is_hot }}')"
+                              title="切换热门状态">
+                            🔥
+                        </span>
+                    </div>
                     {% if information.source_list and information.source_list|length > 0 %}
                     <div class="source-info" style="display: flex; align-items: center; margin-top: 4px; font-size: 12px; color: #666;">
                         来源于&nbsp;
@@ -513,6 +535,30 @@
                 }
             });
         });
+        
+        async function toggleHotStatus(id, currentStatus) {
+            try {
+                var is_hot = currentStatus === 'True' ? false : true;
+                console.log(`is_hot: ${is_hot}`);
+                const response = await fetch(`/content/information/${id}/hot?is_hot=${is_hot}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    // 刷新页面以显示更新后的状态
+                    window.location.reload();
+                } else {
+                    const error = await response.json();
+                    alert(error.detail || '更新热门状态失败');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('更新热门状态时发生错误');
+            }
+        }
     </script>
 </body>
 </html>
