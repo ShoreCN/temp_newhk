@@ -6,6 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import asyncio
 import logging
 import json
+import random
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.core.config import settings
 from app.services.rss_service import RSSService
@@ -13,6 +14,12 @@ from app.core.rss_config import rss_settings
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# 测试阶段使用，可以为拉取到的数据增加一些变化性，例如随机设置is_hot属性
+def random_change(content: dict):
+    # 在拉取到的数据中，随机地将is_hot设置为True的概率是20%
+    content['is_hot'] = random.random() < 0.2 
+    return content
 
 async def update_rss_content(rss_path: str = None):
     try:
@@ -48,6 +55,9 @@ async def update_rss_content(rss_path: str = None):
                 for content in contents:
                     # Convert content to dict
                     content_dict = content.dict(exclude={'id'})
+
+                    # Randomly change is_hot attribute for testing
+                    content_dict = random_change(content_dict)
 
                     # Use original_data_path as unique identifier to avoid duplicates
                     result = await db.information.update_one(
