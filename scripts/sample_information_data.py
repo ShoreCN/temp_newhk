@@ -77,7 +77,8 @@ sample_data_information = [
         "content_type": ContentType.INFORMATION,
         "category": "food",
         "topic": "本周美食排行榜(Mock)",
-        "sub_topic": "香港美食",
+        "title": "本周美食排行榜",
+        "sub_title": "香港美食",
         "tags": ["美食", "香港", "必吃"],
         "original_data_path": "http://mock/openrice",
         "source_list": [

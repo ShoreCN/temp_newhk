@@ -79,7 +79,8 @@ class RSSService:
                 content_type=feed.content_type,
                 category=feed.category,
                 topic=feed.topic,
-                sub_topic=feed_data.get("feed", {}).get("title", ""),  # 使用数据源的标题作为子主题
+                title=feed_data.get("feed", {}).get("title", ""),   # 使用数据源的标题
+                sub_title=feed_data.get("feed", {}).get("title", ""),  # 使用数据源的子标题
                 original_data_path=feed.full_path if feed.full_path else feed.relative_path,
                 source_list=[source],
                 data=[]  # Initialize the data list

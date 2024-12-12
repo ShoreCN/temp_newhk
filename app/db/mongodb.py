@@ -1,9 +1,10 @@
-from motor.motor_asyncio import AsyncIOMotorClient
+from typing import Optional
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from app.core.config import settings
 
 class MongoDB:
-    client: AsyncIOMotorClient = None
-    db = None
+    client: Optional[AsyncIOMotorClient] = None
+    db: Optional[AsyncIOMotorDatabase] = None
 
     async def connect_to_database(self):
         try:
