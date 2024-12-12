@@ -252,7 +252,7 @@ class RSSConfig(BaseSettings):
             "relative_path": "/appstore/xianmian",
             "name": "App Store",
             "logo": "https://apps.apple.com/favicon.ico",
-            "topic": "每日精品限免 / 促销应用"
+            "topic": "每日推荐限免app"
         }
         
     ]
