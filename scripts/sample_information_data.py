@@ -10,10 +10,10 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from app.core.config import settings
 
 sample_data_information = [
-# 热门资讯类内容1
+    # 热门资讯类内容1
     {
         "content_type": ContentType.INFORMATION,
-        "category": "daily",
+        "category": "life",
         "topic": "港区app下载榜单📱(Mock)",
         "tags": ["购物", "必备", "游戏", "生活", "旅游"],
         "original_data_path": "http://mock/appstore",

@@ -11,7 +11,7 @@ sample_guides_data = [
     # 热门指南类内容1
     {
         "content_type": ContentType.GUIDES,
-        "category": "bank",
+        "category": "finance",
         "topic": "香港银行定存利率",
         "sub_topic": "至高 *4.5%*",
         "tags": ["金额", "时间", "币种"],

@@ -153,7 +153,7 @@ class RSSConfig(BaseSettings):
         },
 
         ############################################
-        #               求职类(job)RSS              #
+        #               职场类(job)RSS              #
         ############################################
         {
             "content_type": ContentType.INFORMATION,
@@ -244,11 +244,11 @@ class RSSConfig(BaseSettings):
         },
 
         ############################################
-        #               日常类(daily)RSS            #
+        #               生活类(life)RSS            #
         ############################################
         {
             "content_type": ContentType.INFORMATION,
-            "category": "daily",
+            "category": "life",
             "relative_path": "/appstore/xianmian",
             "name": "App Store",
             "logo": "https://apps.apple.com/favicon.ico",

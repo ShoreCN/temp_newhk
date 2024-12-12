@@ -10,9 +10,9 @@ import asyncio
 
 sample_data_category = [
     {
-        "name": "daily",
+        "name": "job",
         "category_type": CategoryType.INFORMATION,
-        "description": "日常"
+        "description": "职场"
     },
     {
         "name": "food",
@@ -20,19 +20,9 @@ sample_data_category = [
         "description": "美食"
     },
     {
-        "name": "job",
-        "category_type": CategoryType.INFORMATION,
-        "description": "求职"
-    },
-    {
         "name": "event",
         "category_type": CategoryType.INFORMATION,
         "description": "活动"
-    },
-    {
-        "name": "shopping",
-        "category_type": CategoryType.INFORMATION,
-        "description": "购物"
     },
     {
         "name": "news",
@@ -40,9 +30,29 @@ sample_data_category = [
         "description": "新闻"
     },
     {
-        "name": "bank",
+        "name": "shopping",
+        "category_type": CategoryType.INFORMATION,
+        "description": "购物"
+    },
+    {
+        "name": "life",
+        "category_type": CategoryType.INFORMATION,
+        "description": "生活"
+    },
+    {
+        "name": "life",
         "category_type": CategoryType.GUIDES,
-        "description": "银行"
+        "description": "生活"
+    },
+    {
+        "name": "job",
+        "category_type": CategoryType.GUIDES,
+        "description": "职场"
+    },
+    {
+        "name": "finance",
+        "category_type": CategoryType.GUIDES,
+        "description": "金融"
     },
     {
         "name": "communication",
@@ -59,16 +69,6 @@ sample_data_category = [
         "category_type": CategoryType.GUIDES,
         "description": "教育"
     },
-    {
-        "name": "job",
-        "category_type": CategoryType.GUIDES,
-        "description": "求职"
-    },
-    {
-        "name": "life",
-        "category_type": CategoryType.GUIDES,
-        "description": "生活"
-    }
 ]
 
 async def insert_sample_category_data():
