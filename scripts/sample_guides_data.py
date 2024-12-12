@@ -149,7 +149,7 @@ sample_guides_data = [
         "is_hot": True,
     },
     
-    # 热门指南类内容2
+    # 普通指南类内容1
     {
         "content_type": ContentType.GUIDES,
         "category": "job",
@@ -186,10 +186,10 @@ sample_guides_data = [
                 }
             ]
         },
-        "is_hot": True,
+        "is_hot": False,
     },
 
-    # 热门指南类内容3
+    # 普通指南类内容2
     {
         "content_type": ContentType.GUIDES,
         "category": "communication",
@@ -374,6 +374,124 @@ sample_guides_data = [
                 }
             ]
         },
+        "is_hot": False,
+    },
+
+    # 热门指南类内容2
+    {
+        "content_type": ContentType.GUIDES,
+        "category": "communication",
+        "topic": "一卡两号费用",
+        "title": "「一卡两号」保持内地电话畅通无阻，哪个运营商最便宜？",
+        "sub_title": "低至 *$9*",
+        "tags": ["通信", "移动", "联通", "电信"],
+        "original_data_path": "http://mock/onecard",
+        "source_list": [
+            {
+                "name": "香港电讯",
+                "link": "https://www.hkt.com/",
+                "logo": "https://www.hkt.com/assets/HKTCorpsite/img/logo-site-header-tc.png"
+            },
+            {
+                "name": "中国移动",
+                "link": "https://www.hk.chinamobile.com",
+                "logo": "https://www.hk.chinamobile.com/favicon.ico"
+            },
+            {
+                "name": "3HK",
+                "link": "https://www.three.com.hk/",
+                "logo": "https://www.three.com.hk/favicon.ico"
+            },
+            {
+                "name": "数码通",
+                "link": "https://www.smartone.com/",
+                "logo": "https://www.smartone.com/favicon.ico"
+            }
+        ],
+        "data": {
+            "description": "香港移动一卡两号费用",
+            "instructions": "1. 选择运营商\n2. 预算规划\n3. 中介联系\n4. 看房注意事项",
+            "data_table": [
+                {
+                    "name": "中国移动",
+                    "metrics": {
+                        "price": 19
+                    },
+                },
+                {
+                    "name": "3HK",
+                    "metrics": {
+                        "price": 19 
+                    },
+                },
+                {
+                    "name": "SmartTone",
+                    "metrics": {
+                        "price": 9
+                    },
+                },
+                {
+                    "name": "Csl",
+                    "metrics": {
+                        "price": 18
+                    }
+                },
+                {
+                    "name": "中国联通",
+                    "metrics": {
+                        "price": 10
+                    }
+                }
+            ]
+        },
+        "is_hot": True,
+    },
+
+    # 热门指南类内容3
+    {
+        "content_type": ContentType.GUIDES,
+        "category": "education",
+        "topic": "语言学校",
+        "title": "新移民语言班对比，哪间学校最便宜？",
+        "sub_title": "最低 *$5,000*",
+        "tags": ["语言", "教育", "香港"],
+        "original_data_path": "http://mock/onecard",
+        "source_list": [
+            {
+                "name": "香港專業語言學校",
+                "link": "https://www.hkpls.com.hk",
+                "logo": "https://www.hkpls.com.hk/wp-content/themes/custom-theme/assets/images/company-logo.jpg"
+            },
+            {
+                "name": "EF語言學校",
+                "link": "https://www.ef.com.hk",
+                "logo": "https://www.ef.com.hk/favicon.ico"
+            }
+        ],
+        "data": {
+            "description": "香港语言学校对比",
+            "instructions": "1. 选择区域\n2. 预算规划\n3. 中介联系\n4. 注意事项",
+            "data_table": [
+                {
+                    "name": "香港專業語言學校",
+                    "metrics": {
+                        "price": "HKD 20,000起"
+                    }
+                },
+                {
+                    "name": "EF語言學校",
+                    "metrics": {
+                        "price": "HKD 15,000起"
+                    }
+                },
+                {
+                    "name": "香港語言學校3",
+                    "metrics": {
+                        "price": "HKD 5,000起"
+                    }
+                }
+            ]
+        },
         "is_hot": True,
     },
 
@@ -412,7 +530,7 @@ sample_guides_data = [
                 }
             ]
         },
-        "is_hot": True,
+        "is_hot": False,
     }
 ]
 
