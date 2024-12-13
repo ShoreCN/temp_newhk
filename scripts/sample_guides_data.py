@@ -8,7 +8,7 @@ from app.models.content import ContentType, Content
 
 sample_guides_data = [
     
-    # 热门指南类内容1
+    # 热门指南类内容0
     {
         "content_type": ContentType.GUIDES,
         "category": "finance",
@@ -146,7 +146,96 @@ sample_guides_data = [
             ]
             
         },
-        "is_hot": True,
+        "is_hot": False,
+    },
+
+    # 热门指南类内容1
+    {
+        "content_type": ContentType.GUIDES,
+        "category": "finance",
+        "topic": "银行开户方便排行",
+        "title": "香港银行开户门槛对比, 哪个银行最低?",
+        "sub_title": "最低 *$0*",
+        "tags": ["开户", "银行", "香港"],
+        "original_data_path": "http://mock/bank_open_account",
+        "source_list": [
+            {
+                "name": "HSBC",
+                "link": "https://www.hsbc.com.hk",
+                "logo": "https://www.hsbc.com.hk/content/dam/hsbc/hk/images/tc-hsbc-logo-2.svg"
+            },
+            {
+                "name": "Standard Chartered",
+                "link": "https://www.sc.com/hk/zh/",
+                "logo": "https://av.sc.com/assets/global/images/components/header/standard-chartered-logo.svg"
+            },
+            {
+                "name": "Bank of China",
+                "link": "https://www.bochk.com",
+                "logo": "https://www.bochk.com/etc/designs/bochk_web/images/logo.png"
+            }
+        ],
+        "data": {
+            "description": "银行开户方便排行",
+            "instructions": "",
+            "data_table": [
+                {
+                    "name": "恒生银行",
+                    "metrics": {
+                        "minimum_amount": "$0",    # 最低金额
+                        "opening_fee": "$0",         # 开户费
+                        "processing_time": "1小时",  # 处理时间
+                        "logo": "https://www.hsbc.com.hk/content/dam/hsbc/hk/images/tc-hsbc-logo-2.svg"
+                    }
+                },
+                {
+                    "name": "汇丰银行",
+                    "metrics": {
+                        "minimum_amount": "$100",    # 最低金额
+                        "opening_fee": "$0",         # 开户费
+                        "processing_time": "1小时",  # 处理时间
+                        "logo": "https://www.hangseng.com/favicon.ico"
+                    }
+                },
+                {
+                    "name": "招商永隆银行",
+                    "metrics": {
+                        "minimum_amount": "$1000",    # 最低金额
+                        "opening_fee": "$0",         # 开户费
+                        "processing_time": "1小时",  # 处理时间
+                        "logo": "https://www.cmbwinglungbank.com/favicon.ico"
+                    }
+                },
+                {
+                    "name": "众安银行",
+                    "metrics": {
+                        "minimum_amount": "$2000",    # 最低金额
+                        "opening_fee": "$0",         # 开户费
+                        "processing_time": "1小时",  # 处理时间
+                        "logo": "https://www.cmbwinglungbank.com/favicon.ico"
+                    }
+                },
+                {
+                    "name": "渣打银行",
+                    "metrics": {
+                        "minimum_amount": "$3000",    # 最低金额
+                        "opening_fee": "$0",         # 开户费
+                        "processing_time": "1小时",  # 处理时间
+                        "logo": "https://av.sc.com/assets/global/images/components/header/standard-chartered-logo.svg"
+                    }
+                },
+                {
+                    "name": "中国银行",
+                    "metrics": {
+                        "minimum_amount": "$100",    # 最低金额
+                        "opening_fee": "$0",         # 开户费
+                        "processing_time": "1小时",  # 处理时间
+                        "logo": "https://www.bochk.com/etc/designs/bochk_web/images/logo.png"
+                    }
+                }
+            ]
+        },
+        "is_hot": True
     },
     
     # 普通指南类内容1
