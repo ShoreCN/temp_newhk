@@ -531,6 +531,136 @@ sample_guides_data = [
             ]
         },
         "is_hot": False,
+    },
+
+    # 热门指南类内容4
+    {
+        "content_type": ContentType.GUIDES,
+        "category": "food",
+        "topic": "香港地道美食",
+        "title": "探索香港传统地道美食排行榜",
+        "sub_title": "*No.1*",
+        "tags": ["美食", "香港"],
+        "original_data_path": "http://mock/hkfood",
+        "source_list": [
+            {
+                "name": "Openrice",
+                "link": "https://www.openrice.com",
+                "logo": "https://www.openrice.com/favicon.ico"
+            }
+        ],
+        "data": {
+            "description": "香港地道美食探索攻略",
+            "instructions": "",
+            "data_table": [
+                {
+                    "name": "澳洲牛奶公司",
+                    "metrics": {
+                        "category": "传统菜肴",
+                        "price": "80-100",
+                        "opening_time": "1970年",     # 开业时间
+                        "rating": "4.5",
+                        # 预览图
+                        "preview": [
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/b692053470e6766b82c949e6f6c4569d/2023-12/A1i.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/ad46e8db1370321a715208bf35737de7/2023-12/B2j.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/7dd08e91117a8a119139d193ff46a02f/2023-12/C3d.jpg",
+                        ]
+                    }
+                },
+                {
+                    "name": "一点心",
+                    "metrics": {
+                        "category": "传统菜肴",
+                        "price": "50-100",
+                        "opening_time": "近十年",     # 开业时间
+                        "rating": "4",
+                        # 预览图
+                        "preview": [
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/b692053470e6766b82c949e6f6c4569d/2023-12/A1i.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/ad46e8db1370321a715208bf35737de7/2023-12/B2j.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/7dd08e91117a8a119139d193ff46a02f/2023-12/C3d.jpg",
+                        ]
+                    }
+                },
+                {
+                    "name": "坤记煲仔小菜",
+                    "metrics": {
+                        "category": "传统菜肴",
+                        "price": "60-100",
+                        "opening_time": "近十年",     # 开业时间
+                        "rating": "5",
+                        # 预览图
+                        "preview": [
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/b692053470e6766b82c949e6f6c4569d/2023-12/A1i.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/ad46e8db1370321a715208bf35737de7/2023-12/B2j.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/7dd08e91117a8a119139d193ff46a02f/2023-12/C3d.jpg",
+                        ]
+                    }
+                },
+                {
+                    "name": "九记牛腩",
+                    "metrics": {
+                        "category": "传统菜肴",
+                        "price": "80-120",
+                        "opening_time": "1940年",     # 开业时间
+                        "rating": "4",
+                        # 预览图
+                        "preview": [
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/b692053470e6766b82c949e6f6c4569d/2023-12/A1i.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/ad46e8db1370321a715208bf35737de7/2023-12/B2j.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/7dd08e91117a8a119139d193ff46a02f/2023-12/C3d.jpg",
+                        ]
+                    }
+                },
+                {
+                    "name": "十八座狗仔粉",
+                    "metrics": {
+                        "category": "街头小吃",
+                        "price": "40-90",
+                        "opening_time": "近十年",     # 开业时间
+                        "rating": "5",
+                        # 预览图
+                        "preview": [
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/b692053470e6766b82c949e6f6c4569d/2023-12/A1i.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/ad46e8db1370321a715208bf35737de7/2023-12/B2j.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/7dd08e91117a8a119139d193ff46a02f/2023-12/C3d.jpg",
+                        ]
+                    }
+                },
+                {
+                    "name": "公和豆品厂",
+                    "metrics": {
+                        "category": "街头小吃",
+                        "price": "20-30",
+                        "opening_time": "1930年",     # 开业时间
+                        "rating": "5",
+                        # 预览图
+                        "preview": [
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/b692053470e6766b82c949e6f6c4569d/2023-12/A1i.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/ad46e8db1370321a715208bf35737de7/2023-12/B2j.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/7dd08e91117a8a119139d193ff46a02f/2023-12/C3d.jpg",
+                        ]
+                    } 
+                },
+                {
+                    "name": "坤记糕点",
+                    "metrics": {
+                        "category": "街头小吃",
+                        "price": "10-20",
+                        "opening_time": "1940年",     # 开业时间
+                        "rating": "4",
+                        # 预览图
+                        "preview": [
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/b692053470e6766b82c949e6f6c4569d/2023-12/A1i.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/ad46e8db1370321a715208bf35737de7/2023-12/B2j.jpg",
+                            "https://image.hkhl.hk/f/1024p0/0x0/100/none/7dd08e91117a8a119139d193ff46a02f/2023-12/C3d.jpg",
+                        ]
+                    }
+                }
+            ]
+        },
+        "is_hot": True,
     }
 ]
 
