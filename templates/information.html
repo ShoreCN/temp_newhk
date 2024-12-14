@@ -437,6 +437,12 @@
         </div>
     </div>
 
+    <div id="progressModal" class="modal">
+        <div class="modal-content">
+            <p>正在执行RSS更新任务，请稍候...</p>
+        </div>
+    </div>
+
     <script>
         // 分类标签点击处理
         const categoryTags = document.querySelectorAll('.category-tag');
@@ -562,6 +568,7 @@
         }
 
         function executeRssTask() {
+            document.getElementById('progressModal').style.display = 'flex';
             fetch('/task/execute_rss', {
                 method: 'POST',
                 headers: {
@@ -580,6 +587,9 @@
             .catch(error => {
                 console.error('Error:', error);
                 alert('执行RSS更新任务时发生错误');
+            })
+            .finally(() => {
+                document.getElementById('progressModal').style.display = 'none';
             });
         }
     </script>
