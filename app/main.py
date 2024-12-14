@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from app.db.mongodb import db
 from app.models.content import Content, ContentType, get_hot_information, get_hot_guides
 from app.models.response import ResponseModel, ErrorResponse
-from app.api.routes import category_api, content_page, content_api
+from app.api.routes import category_api, content_page, content_api, task_api
 from typing import List, Optional
 from bson import ObjectId, errors as bson_errors
 from datetime import datetime, UTC, timedelta
@@ -41,6 +41,7 @@ templates = Jinja2Templates(directory="templates")
 app.include_router(content_page.router)
 app.include_router(category_api.router)
 app.include_router(content_api.router)
+app.include_router(task_api.router)
 
 
 @app.exception_handler(RequestValidationError)
