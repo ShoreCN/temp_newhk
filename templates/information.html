@@ -320,6 +320,7 @@
         <h1>资讯</h1>
         <div class="action-buttons">
             <button class="btn btn-primary" onclick="window.location.href='/information/edit'">新建资讯</button>
+            <button class="btn btn-primary" onclick="executeRssTask()">执行RSS更新任务</button>
         </div>
     </div>
 
@@ -558,6 +559,28 @@
                 console.error('Error:', error);
                 alert('更新热门状态时发生错误');
             }
+        }
+
+        function executeRssTask() {
+            fetch('/task/execute_rss', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.data && data.data.status === 'success') {
+                    alert('RSS更新任务已成功执行');
+                } else {
+                    alert('RSS更新任务执行失败：' + (data.message || '未知错误'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('执行RSS更新任务时发生错误');
+            });
         }
     </script>
 </body>
