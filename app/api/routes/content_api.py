@@ -1,6 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from app.db.mongodb import db
-from app.models.content import Content, ContentType, get_hot_information, get_hot_guides
+from app.models.content import (
+    Content, ContentType, get_hot_information, get_hot_guides,
+    SearchSuggestion, SearchSuggestionType
+)
 from app.models.response import ResponseModel
 from typing import List, Optional
 from bson import ObjectId, errors as bson_errors
@@ -138,6 +141,201 @@ async def search_content(
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"搜索失败: {str(e)}")
+
+@router.get("/{content_type}/search/suggestions", response_model=ResponseModel[List[SearchSuggestion]])
+async def get_search_suggestions(
+    content_type: ContentType,
+    q: str = "",
+    limit: int = 10
+):
+    """获取搜索建议关键词
+    
+    基于以下数据源提供搜索建议:
+    - 热门内容的标题和主题
+    - 相关标签
+    - 相关分类
+    - 相关来源
+    """
+    try:
+        # collection = db.db[content_type]
+        
+        # # 构建聚合管道
+        # pipeline = [
+        #     # 匹配相关内容
+        #     {"$match": {
+        #         "$or": [
+        #             {"topic": {"$regex": q, "$options": "i"}},
+        #             {"title": {"$regex": q, "$options": "i"}},
+        #             {"tags": {"$regex": q, "$options": "i"}},
+        #             {"category": {"$regex": q, "$options": "i"}},
+        #             {"source_list.name": {"$regex": q, "$options": "i"}}
+        #         ]
+        #     }},
+        #     # 使用facet进行分组聚合
+        #     {"$facet": {
+        #         "topics": [
+        #             {"$match": {"is_hot": True}},
+        #             {"$project": {
+        #                 "_id": {"$toString": "$_id"},
+        #                 "name": "$topic",
+        #                 "suggestion_type": {"$literal": "topic"},
+        #                 "content_type": {"$literal": content_type},
+        #                 "data": {
+        #                     "title": "$title",
+        #                     "category": "$category",
+        #                     "is_hot": "$is_hot"
+        #                 }
+        #             }},
+        #             {"$limit": limit}
+        #         ],
+        #         "titles": [
+        #             {"$match": {"title": {"$exists": True}}},
+        #             {"$project": {
+        #                 "_id": {"$toString": "$_id"},
+        #                 "name": "$title",
+        #                 "suggestion_type": {"$literal": "title"},
+        #                 "content_type": {"$literal": content_type},
+        #                 "data": {
+        #                     "topic": "$topic",
+        #                     "category": "$category",
+        #                     "is_hot": "$is_hot"
+        #                 }
+        #             }},
+        #             {"$limit": limit}
+        #         ],
+        #         "tags": [
+        #             {"$unwind": "$tags"},
+        #             {"$group": {
+        #                 "_id": "$tags",
+        #                 "count": {"$sum": 1},
+        #                 "categories": {"$addToSet": "$category"},
+        #                 "sample_id": {"$first": {"$toString": "$_id"}}
+        #             }},
+        #             {"$project": {
+        #                 "_id": "$sample_id",
+        #                 "name": "$_id",
+        #                 "suggestion_type": {"$literal": "tag"},
+        #                 "content_type": {"$literal": content_type},
+        #                 "data": {
+        #                     "count": "$count",
+        #                     "categories": "$categories"
+        #                 }
+        #             }},
+        #             {"$sort": {"data.count": -1}},
+        #             {"$limit": limit}
+        #         ],
+        #         "categories": [
+        #             {"$group": {
+        #                 "_id": "$category",
+        #                 "count": {"$sum": 1},
+        #                 "sample_id": {"$first": {"$toString": "$_id"}}
+        #             }},
+        #             {"$project": {
+        #                 "_id": "$sample_id",
+        #                 "name": "$_id",
+        #                 "suggestion_type": {"$literal": "category"},
+        #                 "content_type": {"$literal": content_type},
+        #                 "data": {
+        #                     "count": "$count"
+        #                 }
+        #             }},
+        #             {"$sort": {"data.count": -1}},
+        #             {"$limit": limit}
+        #         ],
+        #         "sources": [
+        #             {"$unwind": "$source_list"},
+        #             {"$group": {
+        #                 "_id": "$source_list.name",
+        #                 "count": {"$sum": 1},
+        #                 "sample_id": {"$first": {"$toString": "$_id"}},
+        #                 "logo": {"$first": "$source_list.logo"}
+        #             }},
+        #             {"$project": {
+        #                 "_id": "$sample_id",
+        #                 "name": "$_id",
+        #                 "suggestion_type": {"$literal": "source"},
+        #                 "content_type": {"$literal": content_type},
+        #                 "data": {
+        #                     "count": "$count",
+        #                     "logo": "$logo"
+        #                 }
+        #             }},
+        #             {"$sort": {"data.count": -1}},
+        #             {"$limit": limit}
+        #         ]
+        #     }},
+        #     # 合并所有建议
+        #     {"$project": {
+        #         "suggestions": {
+        #             "$concatArrays": ["$topics", "$titles", "$tags", "$categories", "$sources"]
+        #         }
+        #     }}
+        # ]
+        
+        # result = await collection.aggregate(pipeline).to_list(length=1)
+        # suggestions = result[0]["suggestions"] if result else []
+
+        # 暂时使用模拟数据
+        suggestions = [
+            {
+                "suggestion_type": "topic",
+                "content_type": ContentType.GUIDES,
+                "name": "银行开户便利排行",
+                "id": "xxxxxxxx"
+            },
+            {
+                "suggestion_type": "topic",
+                "content_type": ContentType.GUIDES,
+                "name": "日本大使馆",
+                "id": "xxxxxxxx"
+            },
+            {
+                "suggestion_type": "topic",
+                "content_type": ContentType.GUIDES,
+                "name": "签证费用",
+                "id": "xxxxxxxx"
+            },
+            {
+                "suggestion_type": "topic",
+                "content_type": ContentType.GUIDES,
+                "name": "银行开户资金",
+                "id": "xxxxxxxx"
+            },
+            {
+                "suggestion_type": "topic",
+                "content_type": ContentType.GUIDES,
+                "name": "澳洲签证",
+                "id": "xxxxxxxx"
+            },
+            {
+                "suggestion_type": "topic",
+                "content_type": ContentType.GUIDES,
+                "name": "工签续签",
+                "id": "xxxxxxxx"
+            },
+        ]
+        
+        # Convert to SearchSuggestion model
+        suggestions = [
+            SearchSuggestion(
+                suggestion_type=suggestion["suggestion_type"],
+                content_type=suggestion["content_type"],
+                name=suggestion["name"],
+                id=suggestion["id"],
+                data=suggestion.get("data")
+            )
+            for suggestion in suggestions
+        ]
+        
+        return ResponseModel(
+            data=suggestions,
+            message="获取搜索建议成功",
+            meta={"total": len(suggestions)}
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"获取搜索建议失败: {str(e)}")
+        
 
 @router.get("/{content_type}/{id}")
 async def get_content(content_type: ContentType, id: str):

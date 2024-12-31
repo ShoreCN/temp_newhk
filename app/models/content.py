@@ -1,13 +1,30 @@
-from typing import List, Optional, Union
+from typing import List, Optional, Union, TypeVar, Generic
 from pydantic import BaseModel, Field
 from datetime import datetime, timedelta
 from enum import Enum
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.core.config import settings
 
+T = TypeVar('T')
+
 class ContentType(str, Enum):
     INFORMATION = "information"
     GUIDES = "guides"
+    ALL = "all"
+
+class SearchSuggestionType(str, Enum):
+    TOPIC = "topic"
+    TITLE = "title"
+    TAG = "tag"
+    CATEGORY = "category"
+    SOURCE = "source"
+
+class SearchSuggestion(BaseModel, Generic[T]):
+    suggestion_type: SearchSuggestionType
+    content_type: Optional[ContentType]
+    name: str
+    id: Optional[str] = Field(default=None)
+    data: Optional[T] = None
 
 # class ContentCategory(BaseModel):
 #     name: str
