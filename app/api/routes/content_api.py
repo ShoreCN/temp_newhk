@@ -33,26 +33,6 @@ async def create_content(content: Content):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"创建内容失败: {str(e)}")
 
-@router.get("/{content_type}/{id}")
-async def get_content(content_type: ContentType, id: str):
-    """获取指定ID的内容"""
-    try:
-        collection = db.db[content_type]
-        content = await collection.find_one({"_id": ObjectId(id)})
-        if not content:
-            raise HTTPException(status_code=404, detail="内容不存在")
-        
-        content["id"] = str(content.pop("_id"))
-        
-        return ResponseModel[Content](
-            data=Content(**content),
-            message="获取内容成功"
-        )
-    except bson_errors.InvalidId:
-        raise HTTPException(status_code=400, detail="无效的ID格式")
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
 @router.get("/{content_type}/")
 async def list_contents(
     content_type: ContentType, 
@@ -91,6 +71,91 @@ async def list_contents(
                 "limit": limit
             }
         )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/{content_type}/search")
+async def search_content(
+    content_type: ContentType,
+    q: str,
+    brief: bool = True,
+    skip: int = 0,
+    limit: int = 20
+):
+    """搜索内容
+    
+    可搜索字段:
+    - topic (主题)
+    - title (对外标题)
+    - source_list[].name (来源名称)
+    - data[].name (仅对资讯类内容)
+    """
+    try:
+        collection = db.db[content_type]
+        
+        # 构建搜索条件
+        search_query = {
+            "$and": [
+                {"content_type": content_type},
+                {"$or": [
+                    {"topic": {"$regex": q, "$options": "i"}},
+                    {"title": {"$regex": q, "$options": "i"}},
+                    {"source_list.name": {"$regex": q, "$options": "i"}},
+                ]}
+            ]
+        }
+        
+        # 如果是资讯类内容，增加对data.name的搜索
+        if content_type == ContentType.INFORMATION:
+            search_query["$and"][1]["$or"].append(
+                {"data.name": {"$regex": q, "$options": "i"}}
+            )
+        
+        # 设置查询投影
+        projection = {"data.metrics.description": 0, "data.data_table": 0} if brief else None
+            
+        # 执行查询
+        cursor = collection.find(
+            search_query,
+            projection=projection
+        ).skip(skip).limit(limit)
+        contents = []
+        async for doc in cursor:
+            doc["id"] = str(doc.pop("_id"))
+            contents.append(Content(**doc))
+            
+        # 获取总数
+        total = await collection.count_documents(search_query)
+        
+        return ResponseModel[List[Content]](
+            data=contents,
+            message="搜索成功",
+            meta={
+                "total": total,
+                "skip": skip,
+                "limit": limit
+            }
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"搜索失败: {str(e)}")
+
+@router.get("/{content_type}/{id}")
+async def get_content(content_type: ContentType, id: str):
+    """获取指定ID的内容"""
+    try:
+        collection = db.db[content_type]
+        content = await collection.find_one({"_id": ObjectId(id)})
+        if not content:
+            raise HTTPException(status_code=404, detail="内容不存在")
+        
+        content["id"] = str(content.pop("_id"))
+        
+        return ResponseModel[Content](
+            data=Content(**content),
+            message="获取内容成功"
+        )
+    except bson_errors.InvalidId:
+        raise HTTPException(status_code=400, detail="无效的ID格式")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
