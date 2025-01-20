@@ -13,6 +13,11 @@ class Settings(BaseSettings):
         """构建MongoDB连接URL"""
         return f"mongodb://{self.MONGODB_USERNAME}:{self.MONGODB_PASSWORD}@{self.MONGODB_HOST}:{self.MONGODB_PORT}"
 
+    # AI配置
+    AI_API_KEY: str = "your-api-key"
+    AI_API_BASE_URL: str = "https://api.deepseek.com"
+    AI_MODEL_NAME: str = "deepseek-chat"
+
     class Config:
         env_file = ".env"
 

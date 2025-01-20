@@ -328,8 +328,6 @@ async def get_search_suggestions(
                             for sub_pipeline in stage["$facet"][facet]:
                                 if sub_pipeline.get("$project", {}).get("content_type"):
                                     sub_pipeline["$project"]["content_type"] = content_type_i.value
-                                    
-                        
                         
                     collection = db.db[content_type_i.value]
                     result = await collection.aggregate(pipeline).to_list(length=1)
