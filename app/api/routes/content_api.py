@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.db.mongodb import db
 from app.models.content import (
     Content, ContentType, get_hot_information, get_hot_guides,
-    SearchSuggestion, SearchSuggestionType
+    SearchSuggestion, SearchSuggestionType, SearchContentType
 )
 from app.models.response import ResponseModel
 from typing import List, Optional
@@ -79,7 +79,7 @@ async def list_contents(
 
 @router.get("/{content_type}/search")
 async def search_content(
-    content_type: ContentType,
+    content_type: SearchContentType,
     q: str,
     brief: bool = True,
     skip: int = 0,
@@ -99,7 +99,6 @@ async def search_content(
         # 构建搜索条件
         search_query = {
             "$and": [
-                {"content_type": content_type},
                 {"$or": [
                     {"topic": {"$regex": q, "$options": "i"}},
                     {"title": {"$regex": q, "$options": "i"}},
@@ -107,9 +106,13 @@ async def search_content(
                 ]}
             ]
         }
+
+        # 如果不是选择全部内容进行搜索时, 添加content_type的过滤条件
+        if content_type != SearchContentType.ALL:
+            search_query["$and"].append({"content_type": content_type})
         
         # 如果是资讯类内容，增加对data.name的搜索
-        if content_type == ContentType.INFORMATION:
+        if content_type == SearchContentType.INFORMATION:
             search_query["$and"][1]["$or"].append(
                 {"data.name": {"$regex": q, "$options": "i"}}
             )
@@ -144,7 +147,7 @@ async def search_content(
 
 @router.get("/{content_type}/search/suggestions", response_model=ResponseModel[List[SearchSuggestion]])
 async def get_search_suggestions(
-    content_type: ContentType,
+    content_type: SearchContentType,
     q: str = "",
     limit: int = 10
 ):
@@ -157,171 +160,188 @@ async def get_search_suggestions(
     - 相关来源
     """
     try:
-        # collection = db.db[content_type]
+        if not q:
+            # 如果q参数为空, 则暂时使用模拟数据
+            suggestions = [
+                {
+                    "suggestion_type": "topic",
+                    "content_type": ContentType.GUIDES,
+                    "name": "银行开户便利排行",
+                    "id": "xxxxxxxx"
+                },
+                {
+                    "suggestion_type": "topic",
+                    "content_type": ContentType.GUIDES,
+                    "name": "日本大使馆",
+                    "id": "xxxxxxxx"
+                },
+                {
+                    "suggestion_type": "topic",
+                    "content_type": ContentType.GUIDES,
+                    "name": "签证费用",
+                    "id": "xxxxxxxx"
+                },
+                {
+                    "suggestion_type": "topic",
+                    "content_type": ContentType.GUIDES,
+                    "name": "银行开户资金",
+                    "id": "xxxxxxxx"
+                },
+                {
+                    "suggestion_type": "topic",
+                    "content_type": ContentType.GUIDES,
+                    "name": "澳洲签证",
+                    "id": "xxxxxxxx"
+                },
+                {
+                    "suggestion_type": "topic",
+                    "content_type": ContentType.GUIDES,
+                    "name": "工签续签",
+                    "id": "xxxxxxxx"
+                },
+            ]
+        else:
         
-        # # 构建聚合管道
-        # pipeline = [
-        #     # 匹配相关内容
-        #     {"$match": {
-        #         "$or": [
-        #             {"topic": {"$regex": q, "$options": "i"}},
-        #             {"title": {"$regex": q, "$options": "i"}},
-        #             {"tags": {"$regex": q, "$options": "i"}},
-        #             {"category": {"$regex": q, "$options": "i"}},
-        #             {"source_list.name": {"$regex": q, "$options": "i"}}
-        #         ]
-        #     }},
-        #     # 使用facet进行分组聚合
-        #     {"$facet": {
-        #         "topics": [
-        #             {"$match": {"is_hot": True}},
-        #             {"$project": {
-        #                 "_id": {"$toString": "$_id"},
-        #                 "name": "$topic",
-        #                 "suggestion_type": {"$literal": "topic"},
-        #                 "content_type": {"$literal": content_type},
-        #                 "data": {
-        #                     "title": "$title",
-        #                     "category": "$category",
-        #                     "is_hot": "$is_hot"
-        #                 }
-        #             }},
-        #             {"$limit": limit}
-        #         ],
-        #         "titles": [
-        #             {"$match": {"title": {"$exists": True}}},
-        #             {"$project": {
-        #                 "_id": {"$toString": "$_id"},
-        #                 "name": "$title",
-        #                 "suggestion_type": {"$literal": "title"},
-        #                 "content_type": {"$literal": content_type},
-        #                 "data": {
-        #                     "topic": "$topic",
-        #                     "category": "$category",
-        #                     "is_hot": "$is_hot"
-        #                 }
-        #             }},
-        #             {"$limit": limit}
-        #         ],
-        #         "tags": [
-        #             {"$unwind": "$tags"},
-        #             {"$group": {
-        #                 "_id": "$tags",
-        #                 "count": {"$sum": 1},
-        #                 "categories": {"$addToSet": "$category"},
-        #                 "sample_id": {"$first": {"$toString": "$_id"}}
-        #             }},
-        #             {"$project": {
-        #                 "_id": "$sample_id",
-        #                 "name": "$_id",
-        #                 "suggestion_type": {"$literal": "tag"},
-        #                 "content_type": {"$literal": content_type},
-        #                 "data": {
-        #                     "count": "$count",
-        #                     "categories": "$categories"
-        #                 }
-        #             }},
-        #             {"$sort": {"data.count": -1}},
-        #             {"$limit": limit}
-        #         ],
-        #         "categories": [
-        #             {"$group": {
-        #                 "_id": "$category",
-        #                 "count": {"$sum": 1},
-        #                 "sample_id": {"$first": {"$toString": "$_id"}}
-        #             }},
-        #             {"$project": {
-        #                 "_id": "$sample_id",
-        #                 "name": "$_id",
-        #                 "suggestion_type": {"$literal": "category"},
-        #                 "content_type": {"$literal": content_type},
-        #                 "data": {
-        #                     "count": "$count"
-        #                 }
-        #             }},
-        #             {"$sort": {"data.count": -1}},
-        #             {"$limit": limit}
-        #         ],
-        #         "sources": [
-        #             {"$unwind": "$source_list"},
-        #             {"$group": {
-        #                 "_id": "$source_list.name",
-        #                 "count": {"$sum": 1},
-        #                 "sample_id": {"$first": {"$toString": "$_id"}},
-        #                 "logo": {"$first": "$source_list.logo"}
-        #             }},
-        #             {"$project": {
-        #                 "_id": "$sample_id",
-        #                 "name": "$_id",
-        #                 "suggestion_type": {"$literal": "source"},
-        #                 "content_type": {"$literal": content_type},
-        #                 "data": {
-        #                     "count": "$count",
-        #                     "logo": "$logo"
-        #                 }
-        #             }},
-        #             {"$sort": {"data.count": -1}},
-        #             {"$limit": limit}
-        #         ]
-        #     }},
-        #     # 合并所有建议
-        #     {"$project": {
-        #         "suggestions": {
-        #             "$concatArrays": ["$topics", "$titles", "$tags", "$categories", "$sources"]
-        #         }
-        #     }}
-        # ]
-        
-        # result = await collection.aggregate(pipeline).to_list(length=1)
-        # suggestions = result[0]["suggestions"] if result else []
+            # 构建聚合管道
+            pipeline = [
+                # 匹配相关内容
+                {"$match": {
+                    "$or": [
+                        {"topic": {"$regex": q, "$options": "i"}},
+                        {"title": {"$regex": q, "$options": "i"}},
+                        {"tags": {"$regex": q, "$options": "i"}},
+                        {"category": {"$regex": q, "$options": "i"}},
+                        {"source_list.name": {"$regex": q, "$options": "i"}}
+                    ]
+                }},
+                # 使用facet进行分组聚合
+                {"$facet": {
+                    "topics": [
+                        {"$match": {"is_hot": True}},
+                        {"$project": {
+                            "_id": {"$toString": "$_id"},
+                            "name": "$topic",
+                            "suggestion_type": {"$literal": "topic"},
+                            "content_type": {"$literal": content_type},
+                            "data": {
+                                "title": "$title",
+                                "category": "$category",
+                                "is_hot": "$is_hot"
+                            }
+                        }},
+                        {"$limit": limit}
+                    ],
+                    "titles": [
+                        {"$match": {"title": {"$exists": True}}},
+                        {"$project": {
+                            "_id": {"$toString": "$_id"},
+                            "name": "$title",
+                            "suggestion_type": {"$literal": "title"},
+                            "content_type": {"$literal": content_type},
+                            "data": {
+                                "topic": "$topic",
+                                "category": "$category",
+                                "is_hot": "$is_hot"
+                            }
+                        }},
+                        {"$limit": limit}
+                    ],
+                    "tags": [
+                        {"$unwind": "$tags"},
+                        {"$group": {
+                            "_id": "$tags",
+                            "count": {"$sum": 1},
+                            "categories": {"$addToSet": "$category"},
+                            "sample_id": {"$first": {"$toString": "$_id"}}
+                        }},
+                        {"$project": {
+                            "_id": "$sample_id",
+                            "name": "$_id",
+                            "suggestion_type": {"$literal": "tag"},
+                            "content_type": {"$literal": content_type},
+                            "data": {
+                                "count": "$count",
+                                "categories": "$categories"
+                            }
+                        }},
+                        {"$sort": {"data.count": -1}},
+                        {"$limit": limit}
+                    ],
+                    "categories": [
+                        {"$group": {
+                            "_id": "$category",
+                            "count": {"$sum": 1},
+                            "sample_id": {"$first": {"$toString": "$_id"}}
+                        }},
+                        {"$project": {
+                            "_id": "$sample_id",
+                            "name": "$_id",
+                            "suggestion_type": {"$literal": "category"},
+                            "content_type": {"$literal": content_type},
+                            "data": {
+                                "count": "$count"
+                            }
+                        }},
+                        {"$sort": {"data.count": -1}},
+                        {"$limit": limit}
+                    ],
+                    "sources": [
+                        {"$unwind": "$source_list"},
+                        {"$group": {
+                            "_id": "$source_list.name",
+                            "count": {"$sum": 1},
+                            "sample_id": {"$first": {"$toString": "$_id"}},
+                            "logo": {"$first": "$source_list.logo"}
+                        }},
+                        {"$project": {
+                            "_id": "$sample_id",
+                            "name": "$_id",
+                            "suggestion_type": {"$literal": "source"},
+                            "content_type": {"$literal": content_type},
+                            "data": {
+                                "count": "$count",
+                                "logo": "$logo"
+                            }
+                        }},
+                        {"$sort": {"data.count": -1}},
+                        {"$limit": limit}
+                    ]
+                }},
+                # 合并所有建议
+                {"$project": {
+                    "suggestions": {
+                        "$concatArrays": ["$topics", "$titles", "$tags", "$categories", "$sources"]
+                    }
+                }}
+            ]
 
-        # 暂时使用模拟数据
-        suggestions = [
-            {
-                "suggestion_type": "topic",
-                "content_type": ContentType.GUIDES,
-                "name": "银行开户便利排行",
-                "id": "xxxxxxxx"
-            },
-            {
-                "suggestion_type": "topic",
-                "content_type": ContentType.GUIDES,
-                "name": "日本大使馆",
-                "id": "xxxxxxxx"
-            },
-            {
-                "suggestion_type": "topic",
-                "content_type": ContentType.GUIDES,
-                "name": "签证费用",
-                "id": "xxxxxxxx"
-            },
-            {
-                "suggestion_type": "topic",
-                "content_type": ContentType.GUIDES,
-                "name": "银行开户资金",
-                "id": "xxxxxxxx"
-            },
-            {
-                "suggestion_type": "topic",
-                "content_type": ContentType.GUIDES,
-                "name": "澳洲签证",
-                "id": "xxxxxxxx"
-            },
-            {
-                "suggestion_type": "topic",
-                "content_type": ContentType.GUIDES,
-                "name": "工签续签",
-                "id": "xxxxxxxx"
-            },
-        ]
-        
+            if content_type != SearchContentType.ALL:
+                collection = db.db[content_type]
+                result = await collection.aggregate(pipeline).to_list(length=1)
+                suggestions = result[0]["suggestions"] if result else []
+            else:
+                suggestions = []
+                for content_type_i in ContentType:
+                    # 寻找pipeline中的content_type, 进行修改
+                    for stage in pipeline:
+                        for facet in stage.get("$facet", {}):
+                            for sub_pipeline in stage["$facet"][facet]:
+                                if sub_pipeline.get("$project", {}).get("content_type"):
+                                    sub_pipeline["$project"]["content_type"] = content_type_i.value
+                                    
+                        
+                        
+                    collection = db.db[content_type_i.value]
+                    result = await collection.aggregate(pipeline).to_list(length=1)
+                    suggestions.extend(result[0]["suggestions"] if result else [])
+
         # Convert to SearchSuggestion model
         suggestions = [
             SearchSuggestion(
                 suggestion_type=suggestion["suggestion_type"],
                 content_type=suggestion["content_type"],
                 name=suggestion["name"],
-                id=suggestion["id"],
+                id=suggestion.get("id"),
                 data=suggestion.get("data")
             )
             for suggestion in suggestions

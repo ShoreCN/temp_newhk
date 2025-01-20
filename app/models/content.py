@@ -10,6 +10,10 @@ T = TypeVar('T')
 class ContentType(str, Enum):
     INFORMATION = "information"
     GUIDES = "guides"
+
+class SearchContentType(str, Enum):
+    INFORMATION = "information"
+    GUIDES = "guides"
     ALL = "all"
 
 class SearchSuggestionType(str, Enum):
