@@ -1,10 +1,11 @@
 from openai import OpenAI
 from app.core.config import settings
-from app.models.ai_chat import ChatSession, Message, MessageRole, ChatHistoryResponse
+from app.models.ai_chat import ChatSession, Message, MessageRole, ChatHistoryResponse, \
+                                SessionInfo, ChatSessionResponse, SessionStatus
 from datetime import datetime, timedelta
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 class AIService:
     def __init__(self):
@@ -35,6 +36,14 @@ class AIService:
                     content="你是一个帮助新来香港的人解答问题的AI助手。请提供准确、有帮助的信息。"
                 )
             ],
+            session_info=SessionInfo(
+                name="",
+                first_message="",
+                total_tokens=0,
+                prompt_tokens=0,
+                completion_tokens=0,
+                model=settings.AI_MODEL_NAME
+            ),
             created_at=datetime.now(),
             updated_at=datetime.now()
         )
@@ -81,13 +90,23 @@ class AIService:
             messages=[m.model_dump(exclude={"created_at", "sources"}) for m in session.messages],
             stream=False
         )
-        
+
+        # 获取AI回复
         ai_message = response.choices[0].message.content
         
         # 添加AI回复
         session.messages.append(Message(role=MessageRole.ASSISTANT, content=ai_message))
         session.updated_at = datetime.now()
-        
+
+        # 更新会话信息
+        session.session_info.total_tokens = response.usage.total_tokens
+        session.session_info.prompt_tokens = response.usage.prompt_tokens
+        session.session_info.completion_tokens = response.usage.completion_tokens
+        session.session_info.request_count += 1
+        # 如果会话是新的, 则设置first_message
+        if not session.session_info.first_message: 
+            session.session_info.first_message = message
+
         # 更新会话
         await self.db.chat_sessions.update_one(
             {"session_id": session.session_id},
@@ -165,3 +184,80 @@ class AIService:
         
         chat_history = ChatHistoryResponse(**session)
         return chat_history, total
+
+    async def get_sessions(
+        self,
+        device_id: str,
+        limit: int = 20,
+        offset: int = 0,
+        status: Optional[SessionStatus] = None,
+        is_brief: bool = False
+    ) -> Tuple[List[ChatSessionResponse], int]:
+        """获取设备的会话列表"""
+        query = {"device_id": device_id}
+        if status:
+            query["status"] = status
+        if is_brief:
+            projection = {"messages": 0}
+        
+        # 更新过期状态
+        await self.update_expired_sessions(device_id)
+        
+        total = await self.db.chat_sessions.count_documents(query)
+        
+        cursor = self.db.chat_sessions.find(query, projection)\
+            .sort("updated_at", -1)\
+            .skip(offset)\
+            .limit(limit)
+        
+        sessions = []
+        async for doc in cursor:
+            # 将created_at和updated_at转换为int
+            doc["created_at"] = int(doc["created_at"].timestamp())
+            doc["updated_at"] = int(doc["updated_at"].timestamp())
+            # 不需要_id
+            doc.pop("_id", None)
+            if is_brief:
+                doc["messages"] = []
+            sessions.append(ChatSessionResponse(**doc))
+        
+        return sessions, total
+
+    async def get_session_info(self, session_id: str, device_id: str) -> Optional[ChatSessionResponse]:
+        """获取会话详情"""
+        # 更新过期状态
+        await self.update_expired_sessions(device_id)
+        
+        doc = await self.db.chat_sessions.find_one({
+            "session_id": session_id,
+            "device_id": device_id
+        })
+        
+        if doc:
+            # 将created_at和updated_at转换为int
+            doc["created_at"] = int(doc["created_at"].timestamp())
+            doc["updated_at"] = int(doc["updated_at"].timestamp())
+            # 不需要_id
+            doc.pop("_id", None)
+            return ChatSessionResponse(**doc)
+        return None
+
+    async def update_expired_sessions(self, device_id: str):
+        """更新过期的会话状态"""
+        expire_time = datetime.now() - timedelta(days=1)
+        await self.db.chat_sessions.update_many(
+            {
+                "device_id": device_id,
+                "status": SessionStatus.ACTIVE,
+                "created_at": {"$lt": expire_time}
+            },
+            {
+                "$set": {
+                    "updated_at": datetime.now(),
+                    "session_info": {
+                        "status": SessionStatus.EXPIRED,
+                        "stop_reason": "session expired"
+                    },
+                }
+            }
+        )

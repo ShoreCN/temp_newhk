@@ -1,9 +1,9 @@
-from fastapi import APIRouter, HTTPException, Depends
-from app.models.ai_chat import ChatRequest, ChatResponse, ChatHistoryResponse
+from fastapi import APIRouter, HTTPException
+from app.models.ai_chat import ChatRequest, ChatResponse, ChatHistoryResponse, SessionInfo, SessionStatus, ChatSessionResponse 
 from app.services.ai_service import AIService
 from app.models.response import ResponseModel
 from datetime import datetime, timedelta
-from typing import List, Optional
+from typing import Optional, List
 
 router = APIRouter(prefix="/ai", tags=["AI"])
 ai_service = AIService()
@@ -81,4 +81,66 @@ async def get_chat_history(
         )
         return ResponseModel(data=history, meta={"total": total, "offset": offset, "limit": limit})
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"获取历史记录失败: {str(e)}") 
+        raise HTTPException(status_code=500, detail=f"获取历史记录失败: {str(e)}")
+
+@router.get("/chat/sessions", response_model=ResponseModel[List[ChatSessionResponse]])
+async def get_sessions(
+    device_id: str,
+    limit: int = 20,
+    offset: int = 0,
+    status: Optional[SessionStatus] = None,
+    is_brief: bool = False
+):
+    """
+    获取设备的会话列表
+    
+    Args:  
+        device_id: 设备ID  
+        limit: 返回记录数量限制  
+        offset: 分页偏移量  
+        status: 会话状态过滤(active/stopped/expired)  
+        is_brief: 是否返回简要信息  
+        
+    Returns:  
+        sessions: 会话列表  
+        total: 总记录数  
+    """
+    try:
+        sessions, total = await ai_service.get_sessions(
+            device_id=device_id,
+            limit=limit,
+            offset=offset,
+            status=status,
+            is_brief=is_brief
+        )
+        return ResponseModel(
+            data=sessions,
+            meta={"offset": offset, "limit": limit, "total": total}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取会话列表失败: {str(e)}")
+
+@router.get("/chat/session/{session_id}", response_model=ResponseModel[ChatSessionResponse])
+async def get_session(
+    session_id: str,
+    device_id: str
+):
+    """
+    获取单个会话详情
+    
+    Args:  
+        session_id: 会话ID  
+        device_id: 设备ID，用于验证权限  
+    
+    Returns:  
+        会话详细信息
+    """
+    try:
+        session = await ai_service.get_session_info(session_id, device_id)
+        if not session:
+            raise HTTPException(status_code=404, detail="会话不存在")
+        return ResponseModel(data=session)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取会话详情失败: {str(e)}") 

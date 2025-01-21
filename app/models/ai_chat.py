@@ -8,18 +8,39 @@ class MessageRole(str, Enum):
     USER = "user"
     ASSISTANT = "assistant"
 
+class SessionStatus(str, Enum):
+    ACTIVE = "active"
+    STOPPED = "stopped"
+    EXPIRED = "expired"
+
 class Message(BaseModel):
     role: MessageRole
     content: str
     sources: List[dict] = []
     created_at: datetime = Field(default_factory=datetime.now)
 
+class SessionInfo(BaseModel):
+    name: str = Field(default="")  # 默认和first_message相同, 可以修改
+    first_message: str
+    total_tokens: int = 0
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    model: str = "deepseek-chat"
+    status: SessionStatus = SessionStatus.ACTIVE
+    stop_reason: Optional[str] = None
+    request_count: int = 0
+
 class ChatSession(BaseModel):
     session_id: str
     device_id: str
+    session_info: SessionInfo
     messages: List[Message] = []
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
+
+class ChatSessionResponse(ChatSession):
+    created_at: int = Field(default=int(datetime.now().timestamp()))
+    updated_at: int = Field(default=int(datetime.now().timestamp()))
     
 class ChatRequest(BaseModel):
     session_id: Optional[str] = None
