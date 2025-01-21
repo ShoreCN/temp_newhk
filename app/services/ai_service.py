@@ -16,7 +16,7 @@ class AIService:
         self.db_client = AsyncIOMotorClient(settings.MONGODB_URL)
         self.db = self.db_client[settings.DATABASE_NAME]
         # 为chat_sessions创建一个TTL索引(24小时之后自动删除)
-        self.db.chat_sessions.create_index([("created_at", 1)], expireAfterSeconds=86400)
+        # self.db.chat_sessions.create_index([("created_at", 1)], expireAfterSeconds=86400)
         # 为chat_requests创建一个TTL索引(36小时之后自动删除)
         self.db.chat_requests.create_index([("created_at", 1)], expireAfterSeconds=129600)
 
