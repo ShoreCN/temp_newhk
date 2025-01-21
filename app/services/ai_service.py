@@ -1,9 +1,10 @@
 from openai import OpenAI
 from app.core.config import settings
-from app.models.ai_chat import ChatSession, Message, MessageRole
+from app.models.ai_chat import ChatSession, Message, MessageRole, ChatHistoryResponse
 from datetime import datetime, timedelta
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
+from typing import List, Optional
 
 class AIService:
     def __init__(self):
@@ -18,8 +19,8 @@ class AIService:
         # 为chat_requests创建一个TTL索引(36小时之后自动删除)
         self.db.chat_requests.create_index([("created_at", 1)], expireAfterSeconds=129600)
 
-    async def get_session(self, session_id: str) -> ChatSession:
-        session_data = await self.db.chat_sessions.find_one({"session_id": session_id})
+    async def get_session(self, session_id: str, device_id: str) -> ChatSession:
+        session_data = await self.db.chat_sessions.find_one({"session_id": session_id, "device_id": device_id})
         if not session_data:
             return None
         return ChatSession(**session_data)
@@ -34,8 +35,8 @@ class AIService:
                     content="你是一个帮助新来香港的人解答问题的AI助手。请提供准确、有帮助的信息。"
                 )
             ],
-            created_at=int(datetime.now().timestamp()),
-            updated_at=int(datetime.now().timestamp())
+            created_at=datetime.now(),
+            updated_at=datetime.now()
         )
         await self.db.chat_sessions.insert_one(session.model_dump())
         return session
@@ -76,7 +77,8 @@ class AIService:
         # 调用AI API
         response = self.client.chat.completions.create(
             model=settings.AI_MODEL_NAME,
-            messages=[m.model_dump() for m in session.messages],
+            # 需要将created_at和sources从Message中排除
+            messages=[m.model_dump(exclude={"created_at", "sources"}) for m in session.messages],
             stream=False
         )
         
@@ -114,3 +116,52 @@ class AIService:
                 })
                 
         return sources 
+
+    async def get_chat_history(
+        self,
+        device_id: str,
+        session_id: str,
+        limit: int = 20,
+        offset: int = 0
+    ) -> tuple[ChatHistoryResponse, int]:
+        """
+        从chat_sessions集合中获取历史对话记录
+        
+        Args:
+            device_id: 设备ID
+            session_id: 会话ID，只返回特定会话的记录
+            limit: 返回记录数量限制
+            offset: 分页偏移量
+        
+        Returns:
+            List[ChatHistoryResponse]: 历史对话记录列表
+        """
+        query = {"device_id": device_id}
+        query["session_id"] = session_id
+            
+        # 从chat_sessions集合中获取会话
+        session = await self.db.chat_sessions.find_one(
+            query
+        )
+        
+        # 跳过系统消息
+        messages = [msg for msg in session["messages"] if msg["role"] != "system"]
+        session["messages"] = messages
+        
+        # 将created_at和updated_at转换为int
+        session["created_at"] = int(session["created_at"].timestamp())
+        session["updated_at"] = int(session["updated_at"].timestamp())
+        
+        # 将messages中的created_at转换为int
+        for msg in session["messages"]:
+            if msg.get("created_at"):
+                msg["created_at"] = int(msg["created_at"].timestamp())
+
+        # 手动实现分页
+        total = len(session["messages"])
+        start_idx = offset
+        end_idx = offset + limit
+        session["messages"] = session["messages"][start_idx:end_idx]
+        
+        chat_history = ChatHistoryResponse(**session)
+        return chat_history, total
