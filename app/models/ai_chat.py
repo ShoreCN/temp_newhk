@@ -53,7 +53,7 @@ class ChatRequest(BaseModel):
     
 class ChatResponse(BaseModel):
     session_id: str
-    message: str
+    content: str
     sources: List[Source] = []
     suggestions: List[str] = []
 
