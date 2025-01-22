@@ -48,13 +48,9 @@ async def chat(request: ChatRequest):
         session = await ai_service.create_session(request.device_id)
     
     # 进行对话
-    message, sources = await ai_service.chat(session, request.message)
+    response = await ai_service.chat(session, request.message)
     
-    return ResponseModel(data=ChatResponse(
-        session_id=session.session_id,
-        message=message,
-        sources=sources
-    ))
+    return ResponseModel(data=response)
 
 @router.get("/chat/history", response_model=ResponseModel[ChatHistoryResponse])
 async def get_chat_history(

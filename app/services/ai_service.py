@@ -1,7 +1,7 @@
 from openai import OpenAI
 from app.core.config import settings
 from app.models.ai_chat import ChatSession, Message, MessageRole, ChatHistoryResponse, \
-                                SessionInfo, ChatSessionResponse, SessionStatus
+                                SessionInfo, ChatSessionResponse, SessionStatus, ChatResponse
 from datetime import datetime, timedelta
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
@@ -33,7 +33,36 @@ class AIService:
             messages=[
                 Message(
                     role=MessageRole.SYSTEM,
-                    content="你是一个帮助新来香港的人解答问题的AI助手。请提供准确、有帮助的信息。"
+                    # content="你是一个帮助新来香港的人解答问题的AI助手。请提供准确、有帮助的信息。"
+                    content="""
+                        # 角色
+                        你是一个香港万事通，对香港的工作、生活、学习等方面了如指掌。可以用清晰、准确且易懂的语言回答用户关于香港的各种问题。
+
+                        ## 技能
+                        ### 技能 1: 解答香港工作问题
+                        1. 当用户询问香港相关问题时，先确定问题的具体方向，如政务、交通、住房等。
+                        2. 结合利用搜索和知识库查找相关信息，确保回答准确且有依据。
+                        3. 详细解答问题，并提供一些实用的建议或资源。
+                        4. 最后基于提问和回答，给出三个用户可能想继续追问的问题，问题要简短具体，与上下文紧密相关，不需要序号或其他格式。
+                        5. 回答中的内容来源和继续采用 JSON 格式，内容包括回答、建议、小贴士和资源。
+                        ===回复示例===
+                        - 👨‍💼 回答：<对问题的详细解答>
+                        - 💡 建议：<相关建议>
+                        - 💡 小贴士：<小贴士内容>
+
+                        {{JSON_START}}
+                        {
+                            "source": [{"<内容来源1>":"<内容来源1链接>"}, {"<内容来源2>":"<内容来源2链接>"}, {"<内容来源3>":"<内容来源3链接>"}],
+                            "next_questions": ["<推荐追问问题1>", "<推荐追问问题2>", "<推荐追问问题3>"]
+                        }
+                        {{JSON_START}}
+                        ===示例结束===
+
+                        ## 限制:
+                        - 只回答与香港的工作、生活、学习有关的问题，拒绝回答无关话题。
+                        - 所输出的内容必须按照给定的格式进行组织，不能偏离框架要求。
+                        - 确保信息来源准确可靠，可通过搜索工具进行核实。
+                    """
                 )
             ],
             session_info=SessionInfo(
@@ -72,8 +101,10 @@ class AIService:
             return False
             
         return True
+
+    # 基于提示词的格式要求和AI回答结果, 提取出JSON数据(以{{JSON_START}}和{{JSON_END}}为分隔符)
         
-    async def chat(self, session: ChatSession, message: str) -> tuple[str, list]:
+    async def chat(self, session: ChatSession, message: str) -> ChatResponse:
         # 记录用户请求
         await self.db.chat_requests.insert_one({
             "device_id": session.device_id,
@@ -116,7 +147,12 @@ class AIService:
         # 查找相关内容作为来源
         # sources = await self._find_relevant_sources(message)
         sources = []
-        return ai_message, sources
+        return ChatResponse(
+            session_id=session.session_id,
+            message=ai_message,
+            sources=sources,
+            suggestions=[]
+        )
         
     async def _find_relevant_sources(self, query: str) -> list:
         # 从guides和information集合中查找相关内容
@@ -197,8 +233,7 @@ class AIService:
         query = {"device_id": device_id}
         if status:
             query["status"] = status
-        if is_brief:
-            projection = {"messages": 0}
+        projection = {"messages": 0} if is_brief else {}
         
         # 更新过期状态
         await self.update_expired_sessions(device_id)
