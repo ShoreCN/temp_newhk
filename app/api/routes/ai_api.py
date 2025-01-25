@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.models.ai_chat import ChatRequest, ChatResponse, ChatHistoryResponse, SessionInfo, SessionStatus, ChatSessionResponse 
+from app.models.ai_chat import ChatRequest, ChatResponse, ChatHistoryResponse, SessionStatus, ChatSessionResponse 
 from app.services.ai_service import AIService
 from app.models.response import ResponseModel
 from datetime import datetime, timedelta
@@ -75,7 +75,11 @@ async def get_chat_history(
             limit=limit,
             offset=offset
         )
+        if not history:
+            raise HTTPException(status_code=404, detail="无法获取历史记录")
         return ResponseModel(data=history, meta={"total": total, "offset": offset, "limit": limit})
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"获取历史记录失败: {str(e)}")
 

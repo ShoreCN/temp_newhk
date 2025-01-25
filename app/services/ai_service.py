@@ -2,7 +2,7 @@ from openai import OpenAI
 from app.core.config import settings
 from app.models.ai_chat import ChatSession, Message, MessageRole, ChatHistoryResponse, \
                                 SessionInfo, ChatSessionResponse, SessionStatus, ChatResponse, \
-                                Source
+                                Reference
 from datetime import datetime, timedelta
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
@@ -54,8 +54,8 @@ class AIService:
 
                         {{JSON_START}}
                         {
-                            "sources": [{"<内容来源1>":"<内容来源1链接>"}, {"<内容来源2>":"<内容来源2链接>"}, {"<内容来源3>":"<内容来源3链接>"}],
-                            "next_questions": ["<推荐追问问题1>", "<推荐追问问题2>", "<推荐追问问题3>"]
+                            "references": [{"<内容来源1>":"<内容来源1链接>"}, {"<内容来源2>":"<内容来源2链接>"}, {"<内容来源3>":"<内容来源3链接>"}],
+                            "suggestions": ["<推荐追问问题1>", "<推荐追问问题2>", "<推荐追问问题3>"]
                         }
                         {{JSON_END}}
                         ===示例结束===
@@ -112,7 +112,7 @@ class AIService:
     # 输出示例:
     """
     {
-        "source": [{"香港国际机场":"https://www.hongkongairport.com/"}, {"中国铁路12306":"https://www.12306.cn/"}, {"香港入境事务处":"https://www.immd.gov.hk/"}],
+        "references": [{"香港国际机场":"https://www.hongkongairport.com/"}, {"中国铁路12306":"https://www.12306.cn/"}, {"香港入境事务处":"https://www.immd.gov.hk/"}],
         "next_questions": ["香港有哪些主要的口岸？", "如何从香港国际机场到市区？", "在香港使用哪种交通卡最方便？"]
     }
     """
@@ -131,27 +131,27 @@ class AIService:
         json_str = json_str.strip()
         return json.loads(json_str)
     
-    # 从JSON数据中提取出Source
-    def _find_sources(self, json_data: dict) -> list[Source]:
-        sources = []
+    # 从JSON数据中提取出Reference
+    def _find_references(self, json_data: dict) -> list[Reference]:
+        references = []
 
         # sources是一个列表, 例如[{"<内容来源1>":"<内容来源1链接>"}, {"<内容来源2>":"<内容来源2链接>"}, {"<内容来源3>":"<内容来源3链接>"}], 
-        # 需要将列表中的每个字典转换为Source对象
-        for source in json_data.get("sources", []):
+        # 需要将列表中的每个字典转换为Reference对象
+        for reference in json_data.get("references", []):
             try:
-                title = list(source.keys())[0]
-                url = list(source.values())[0]
-                sources.append(Source(
+                title = list(reference.keys())[0]
+                url = list(reference.values())[0]
+                references.append(Reference(
                     title=title,
                     url=url
                 ))
             except Exception as e:
-                print(f"Error extracting source: {e}")
-        return sources
+                print(f"Error extracting reference: {e}")
+        return references
     
-    # 从JSON数据中提取出继续追问的问题
-    def _find_next_questions(self, json_data: dict) -> list[str]:
-        return json_data.get("next_questions", [])
+    # 从JSON数据中提取出推荐继续追问的问题
+    def _find_suggestions(self, json_data: dict) -> list[str]:
+        return json_data.get("suggestions", [])
     
     # 移除ai回复中的JSON数据
     def _remove_json_data(self, message: str) -> str:
@@ -184,11 +184,11 @@ class AIService:
 
         # 查找相关内容作为来源
         json_data = self._extract_extend_json(ai_message)
-        sources = self._find_sources(json_data)
-        next_questions = self._find_next_questions(json_data)
+        references = self._find_references(json_data)
+        suggestions = self._find_suggestions(json_data)
         
         # 添加AI回复
-        session.messages.append(Message(role=MessageRole.ASSISTANT, content=ai_message, sources=sources))
+        session.messages.append(Message(role=MessageRole.ASSISTANT, content=ai_message, references=references))
         session.updated_at = datetime.now()
 
         # 更新会话信息
@@ -209,8 +209,8 @@ class AIService:
         return ChatResponse(
             session_id=session.session_id,
             content=self._remove_json_data(ai_message),
-            sources=sources,
-            suggestions=next_questions
+            references=references,
+            suggestions=suggestions
         )
         
     async def get_chat_history(
@@ -232,13 +232,13 @@ class AIService:
         Returns:
             List[ChatHistoryResponse]: 历史对话记录列表
         """
-        query = {"device_id": device_id}
-        query["session_id"] = session_id
+        query = {"device_id": device_id, "session_id": session_id}
             
         # 从chat_sessions集合中获取会话
-        session = await self.db.chat_sessions.find_one(
-            query
-        )
+        session = await self.db.chat_sessions.find_one(query)
+
+        if not session:
+            return None, 0
         
         # 跳过系统消息
         messages = [msg for msg in session["messages"] if msg["role"] != "system"]

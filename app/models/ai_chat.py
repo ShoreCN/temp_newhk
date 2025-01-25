@@ -13,14 +13,14 @@ class SessionStatus(str, Enum):
     STOPPED = "stopped"
     EXPIRED = "expired"
 
-class Source(BaseModel):
+class Reference(BaseModel):
     title: str
     url: str
 
 class Message(BaseModel):
     role: MessageRole
     content: str
-    sources: List[Source] = []
+    references: List[Reference] = []
     created_at: datetime = Field(default_factory=datetime.now)
 
 class SessionInfo(BaseModel):
@@ -54,13 +54,13 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     session_id: str
     content: str
-    sources: List[Source] = []
+    references: List[Reference] = []
     suggestions: List[str] = []
 
 class MessageResponse(BaseModel):
     role: MessageRole
     content: str
-    sources: List[Source] = []
+    references: List[Reference] = []
     created_at: int = Field(default=int(datetime.now().timestamp()))
 
 class ChatHistoryResponse(BaseModel):
