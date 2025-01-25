@@ -20,6 +20,7 @@ class RSSFeed(BaseSettings):
     name: str
     logo: str
     topic: str
+    update_interval: int = 14400  # 默认每4小时更新一次
 
 class RSSConfig(BaseSettings):
     FETCH_MODE: FetchMode = FetchMode.PRIORITY
@@ -180,6 +181,14 @@ class RSSConfig(BaseSettings):
             "logo": "https://static.eleduck.com/_next/static/media/icon-500.d77f6cfc.png",
             # "topic": "电鸭社区招聘&找人栏目最新话题"
             "topic": "网络社区招聘话题"
+        },
+        {
+            "content_type": ContentType.INFORMATION,
+            "category": "job",
+            "relative_path": "/easynomad",
+            "name": "轻松游牧",
+            "logo": "https://easynomad.cn/favicon.ico",
+            "topic": "远程工作职位"
         },
 
         ############################################

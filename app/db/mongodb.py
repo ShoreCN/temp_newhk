@@ -22,4 +22,12 @@ class MongoDB:
             self.client.close()
             print("MongoDB connection closed")
 
+    async def get_db(self):
+        if not self.db:
+            await self.connect_to_database()
+        return self.db
+
 db = MongoDB()
+
+async def get_db():
+    return await db.get_db()
