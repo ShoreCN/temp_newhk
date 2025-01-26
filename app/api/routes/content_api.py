@@ -166,37 +166,37 @@ async def get_search_suggestions(
                 {
                     "suggestion_type": "topic",
                     "content_type": ContentType.GUIDES,
-                    "name": "银行开户便利排行",
+                    "name": "工作",
                     "id": "xxxxxxxx"
                 },
                 {
                     "suggestion_type": "topic",
                     "content_type": ContentType.GUIDES,
-                    "name": "日本大使馆",
+                    "name": "热门",
                     "id": "xxxxxxxx"
                 },
                 {
                     "suggestion_type": "topic",
                     "content_type": ContentType.GUIDES,
-                    "name": "签证费用",
+                    "name": "餐厅",
                     "id": "xxxxxxxx"
                 },
                 {
                     "suggestion_type": "topic",
                     "content_type": ContentType.GUIDES,
-                    "name": "银行开户资金",
+                    "name": "港区",
                     "id": "xxxxxxxx"
                 },
                 {
                     "suggestion_type": "topic",
                     "content_type": ContentType.GUIDES,
-                    "name": "澳洲签证",
+                    "name": "优惠",
                     "id": "xxxxxxxx"
                 },
                 {
                     "suggestion_type": "topic",
                     "content_type": ContentType.GUIDES,
-                    "name": "工签续签",
+                    "name": "美食",
                     "id": "xxxxxxxx"
                 },
             ]
