@@ -17,8 +17,8 @@ async def create_category(category: Category):
     """创建新的分类"""
     try:
         category_dict = category.model_dump(exclude={"id"})
-        category_dict["created_at"] = datetime.now(UTC)
-        category_dict["updated_at"] = datetime.now(UTC)
+        category_dict["created_at"] = int(datetime.now().timestamp())
+        category_dict["updated_at"] = int(datetime.now().timestamp())
         
         collection = db.db["category"]
         result = await collection.insert_one(category_dict)
