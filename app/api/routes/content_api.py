@@ -178,13 +178,31 @@ async def get_search_suggestions(
                 {
                     "suggestion_type": "topic",
                     "content_type": ContentType.GUIDES,
-                    "name": "餐厅",
+                    "name": "港区",
                     "id": "xxxxxxxx"
                 },
                 {
                     "suggestion_type": "topic",
                     "content_type": ContentType.GUIDES,
-                    "name": "港区",
+                    "name": "最新",
+                    "id": "xxxxxxxx"
+                },
+                {
+                    "suggestion_type": "topic",
+                    "content_type": ContentType.GUIDES,
+                    "name": "资讯",
+                    "id": "xxxxxxxx"
+                },
+                {
+                    "suggestion_type": "topic",
+                    "content_type": ContentType.GUIDES,
+                    "name": "购物",
+                    "id": "xxxxxxxx"
+                },
+                {
+                    "suggestion_type": "topic",
+                    "content_type": ContentType.GUIDES,
+                    "name": "餐厅",
                     "id": "xxxxxxxx"
                 },
                 {
@@ -197,6 +215,12 @@ async def get_search_suggestions(
                     "suggestion_type": "topic",
                     "content_type": ContentType.GUIDES,
                     "name": "美食",
+                    "id": "xxxxxxxx"
+                },
+                {
+                    "suggestion_type": "topic",
+                    "content_type": ContentType.GUIDES,
+                    "name": "职位",
                     "id": "xxxxxxxx"
                 },
             ]
