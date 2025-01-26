@@ -113,7 +113,7 @@ async def search_content(
         
         # 如果是资讯类内容，增加对data.name的搜索
         if content_type == SearchContentType.INFORMATION:
-            search_query["$and"][1]["$or"].append(
+            search_query["$and"][0]["$or"].append(
                 {"data.name": {"$regex": q, "$options": "i"}}
             )
         
